@@ -9,11 +9,16 @@ Version: 0.1
 class CacheCleanerMain
 {
   protected $logger;
+  protected $gearmanClient;
 
   public function __construct($logger)
   {
     $this->logger = $logger;
-    // $this->addHooks();
+
+    $this->gearmanClient = isset($injection["gearmanClient"]) ? $injection["gearmanClient"] : new \GearmanClient();
+    $this->gearmanClient->addServer("127.0.0.1");
+
+    $this->addHooks();
   }
 
   protected function addHooks()
@@ -35,16 +40,11 @@ class CacheCleanerMain
 
   public function clear_cache($id)
   {
-    $endpoint = $id;
-
-    // if ACF, clear /relationships endpoint
     $post = get_post($id);
-    if ($post->post_type == "acf") {
-      $endpoint = "relationships";
-    }
 
-    return $this->gearmanClient->doBackground("elasticsearch_put", json_encode(array(
-      "endpoint" => $endpoint
+    return $this->gearmanClient->doBackground("api_cache_clean", json_encode(array(
+      "post" => $post,
+      "endpoint" => $post->post_type == "acf" ? "relationships" : $id
     )));
     
   }
