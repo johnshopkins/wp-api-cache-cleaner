@@ -1,0 +1,24 @@
+{
+  "name": "johnshopkins/wp-api-cache-cleaner",
+  "type": "wordpress-plugin",
+  "description": "",
+  "license": "MIT",
+  "homepage": "http://github.com/johnshopkins/wp-api-cache-cleaner",
+  "authors": [
+    {
+      "name": "johnshopkins",
+      "homepage": "https://github.com/johnshopkins"
+    }
+  ],
+  "require": {
+    
+  },
+  "require-dev": {
+    "phpunit/phpunit": "4.0.*"
+  },
+  "autoload": {
+    "psr-4" : {
+      "CacheCleaner\\" : ["src/", "tests/"]
+    }
+  }
+}
