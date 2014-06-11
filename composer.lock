@@ -4,9 +4,132 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c35f09f4b0f3f6eed24b11e9d14e7831",
+    "hash": "277633da59e2da5d601bcca4e2717a05",
     "packages": [
-
+        {
+            "name": "johnshopkins/http-exchange",
+            "version": "v0.3.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/johnshopkins/http-exchange.git",
+                "reference": "765ebcb002a09423f6e943347a1c4fb83cf26bcd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/johnshopkins/http-exchange/zipball/765ebcb002a09423f6e943347a1c4fb83cf26bcd",
+                "reference": "765ebcb002a09423f6e943347a1c4fb83cf26bcd",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "HttpExchange": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jason Rhodes",
+                    "email": "jrhodes@jhu.edu",
+                    "homepage": "http://notrobotic.com"
+                },
+                {
+                    "name": "Jen Wachter",
+                    "email": "jwachter@jhu.edu",
+                    "homepage": "http://www.jenwachter.com"
+                }
+            ],
+            "description": "A collection of PHP interfaces and adapters to make swapping out HTTP library dependencies quick and easy.",
+            "homepage": "http://github.com/johnshopkins/http-exchange",
+            "keywords": [
+                "adapters",
+                "api",
+                "http",
+                "interfaces",
+                "wrapper"
+            ],
+            "time": "2014-01-09 13:38:40"
+        },
+        {
+            "name": "johnshopkins/secrets",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:johnshopkins/secrets.git",
+                "reference": "3c7021017a047d0e05a6cfc6ff21f3cd2e808518"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/johnshopkins/secrets/zipball/3c7021017a047d0e05a6cfc6ff21f3cd2e808518",
+                "reference": "3c7021017a047d0e05a6cfc6ff21f3cd2e808518",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Secrets": "src/"
+                }
+            },
+            "homepage": "http://github.com/johnshopkins/secrets",
+            "support": {
+                "source": "https://github.com/johnshopkins/secrets/tree/master",
+                "issues": "https://github.com/johnshopkins/secrets/issues"
+            },
+            "time": "2014-06-11 16:33:38"
+        },
+        {
+            "name": "resty/resty",
+            "version": "0.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fictivekin/Resty.php.git",
+                "reference": "3ba18ec4b507b3b6fcbc49bba5a503baba051c0a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fictivekin/Resty.php/zipball/3ba18ec4b507b3b6fcbc49bba5a503baba051c0a",
+                "reference": "3ba18ec4b507b3b6fcbc49bba5a503baba051c0a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "funkatron/funit": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Resty\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache 2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Ed Finkler",
+                    "email": "ed@fictivekin.com",
+                    "homepage": "http://fictivekin.com"
+                }
+            ],
+            "description": "A simple PHP library for doing RESTful HTTP stuff. Does not require the curl extension",
+            "homepage": "https://github.com/fictivekin/resty.php",
+            "keywords": [
+                "client",
+                "http",
+                "rest",
+                "restful"
+            ],
+            "time": "2014-02-13 16:19:46"
+        }
     ],
     "packages-dev": [
         {
@@ -332,16 +455,16 @@
         },
         {
             "name": "phpunit/phpunit-mock-objects",
-            "version": "2.0.8",
+            "version": "2.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit-mock-objects.git",
-                "reference": "42f29d650744fd7ce785e7a4dd3598a09b0bfd2b"
+                "reference": "a01285d0b705af5963367451088508b6d4e417f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/42f29d650744fd7ce785e7a4dd3598a09b0bfd2b",
-                "reference": "42f29d650744fd7ce785e7a4dd3598a09b0bfd2b",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/a01285d0b705af5963367451088508b6d4e417f2",
+                "reference": "a01285d0b705af5963367451088508b6d4e417f2",
                 "shasum": ""
             },
             "require": {
@@ -385,7 +508,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2014-06-07 12:56:49"
+            "time": "2014-06-07 16:22:54"
         },
         {
             "name": "sebastian/diff",
@@ -644,9 +767,9 @@
 
     ],
     "minimum-stability": "stable",
-    "stability-flags": [
-
-    ],
+    "stability-flags": {
+        "johnshopkins/secrets": 20
+    },
     "platform": [
 
     ],
