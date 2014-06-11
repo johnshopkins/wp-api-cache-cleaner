@@ -1,6 +1,7 @@
 <?php
 
 namespace CacheCleaner\Workers;
+use Secrets\Secret;
 
 class CacheCleaner
 {
@@ -51,8 +52,13 @@ class CacheCleaner
   {
     if ($this->isRevision($workload->post)) return false;
 
+    $secrets = Secret::get("jhu", "production", "plugins", "wp-api-cache-cleaner");
+
+    $key = $secrets->key;
+    $pw = $secrets->password;
+
     $get = $this->getBase() . "/assets/plugins/wp-api-cache-cleaner/src/Workers/wget_cleaner.php";
-    $response = $this->httpEngine->get($get, array("endpoint" => $workload->endpoint), array("X_JHU" => "SAP6@ar7&rucru3"))->getBody();
+    $response = $this->httpEngine->get($get, array("endpoint" => $workload->endpoint), array($key => $password))->getBody();
 
     return true;
   }
