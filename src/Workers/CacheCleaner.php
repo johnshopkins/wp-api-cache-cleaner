@@ -58,7 +58,7 @@ class CacheCleaner
     $pw = $secrets->password;
 
     $get = $this->getBase() . "/assets/plugins/wp-api-cache-cleaner/src/Workers/wget_cleaner.php";
-    $response = $this->httpEngine->get($get, array("endpoint" => $workload->endpoint), array($key => $password))->getBody();
+    $response = $this->httpEngine->get($get, array("endpoint" => $workload->endpoint), array($key => $pw))->getBody();
 
     return true;
   }
