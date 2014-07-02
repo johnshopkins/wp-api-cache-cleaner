@@ -9,8 +9,6 @@ class CacheKeyCleaner
 
   public function __construct($deps = array())
   {
-    
-
     $this->api = isset($deps["api"]) ? $deps["api"] : new \WPUtilities\API();
   }
 
