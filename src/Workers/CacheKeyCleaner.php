@@ -75,10 +75,12 @@ class CacheKeyCleaner
     unset($key["stitched"]);
     unset($key["source"]);
 
+    // Why does this have to be on? The cached should
+    // is deleted by now.
+    $key["clear_cache"] = true;
+
     $query_string = http_build_query($key);
 
-    $response = $this->api->get($uri, $query_string);
-
-    print_r($response);
+    $this->api->get($uri, $query_string);
   }
 }
