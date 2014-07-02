@@ -3,37 +3,20 @@ ini_set('display_errors',1);
 error_reporting(E_ALL);
 ?>
 
-
 <?php
 
-use Secrets\Secret;
-
+// autoload stuff
 $root = dirname(dirname(dirname(dirname(dirname(dirname(__DIR__))))));
+define("WP_USE_THEMES", false);
 require $root . "/vendor/autoload.php";
+require $root . "/vendor/wordpress/wordpress/wp-blog-header.php"; // we need this for the ENV
 
+// validate request
 $headers = apache_request_headers();
-$secrets = Secret::get("jhu", "production", "plugins", "wp-api-cache-cleaner");
+$validator = new \CacheCleaner\Workers\ClearCacheValidator($headers);
+if (!$validator->validate()) die(1);
 
-$key = $secrets->key;
-$pw = $secrets->password;
-
-if (!isset($headers[$key]) || (isset($headers[$key]) && $headers[$key] !== $pw)) {
-  die(1);
-}
-
-$endpoint = $_GET["endpoint"];
-
-$info = apc_cache_info("user");
-
-$patterns = array(
-  "uri=%2F" . $endpoint,
-  "meta_[^=]+=" . $endpoint
-);
-
-foreach ($info["cache_list"] as $cachedItem) {
-  if (preg_match("/(" . implode("|", $patterns) . ")/", $cachedItem["info"])) {
-    apc_delete($cachedItem["info"]);
-  }
-}
+$cleaner = new \CacheCleaner\Workers\CacheKeyCleaner();
+$cleaner->clean($_GET["endpoint"]);
 
 die();
