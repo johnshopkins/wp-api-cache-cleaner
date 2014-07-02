@@ -3,6 +3,9 @@
 namespace CacheCleaner\Workers;
 use Secrets\Secret;
 
+/**
+ * Gearman Job
+ */
 class CacheCleaner
 {
   /**
