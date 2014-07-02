@@ -13,12 +13,17 @@
   "repositories": [
     {
       "type": "vcs",
+      "url": "git@github.com:johnshopkins/wp-utilities.git"
+    },
+    {
+      "type": "vcs",
       "url": "git@github.com:johnshopkins/secrets.git"
     }
   ],
   "require": {
     "johnshopkins/http-exchange": "0.3.*",
     "johnshopkins/secrets": "dev-master",
+    "johnshopkins/wp-utilities": "dev-master",
     "resty/resty": "0.6.*"
   },
   "require-dev": {

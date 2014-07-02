@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "277633da59e2da5d601bcca4e2717a05",
+    "hash": "7a502be2e4cb607a622efd8aaccca22c",
     "packages": [
         {
             "name": "johnshopkins/http-exchange",
@@ -62,12 +62,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:johnshopkins/secrets.git",
-                "reference": "3c7021017a047d0e05a6cfc6ff21f3cd2e808518"
+                "reference": "41d25ff2d980e47091d7bc6c435f59d5548fa89c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/johnshopkins/secrets/zipball/3c7021017a047d0e05a6cfc6ff21f3cd2e808518",
-                "reference": "3c7021017a047d0e05a6cfc6ff21f3cd2e808518",
+                "url": "https://api.github.com/repos/johnshopkins/secrets/zipball/41d25ff2d980e47091d7bc6c435f59d5548fa89c",
+                "reference": "41d25ff2d980e47091d7bc6c435f59d5548fa89c",
                 "shasum": ""
             },
             "type": "library",
@@ -81,7 +81,43 @@
                 "source": "https://github.com/johnshopkins/secrets/tree/master",
                 "issues": "https://github.com/johnshopkins/secrets/issues"
             },
-            "time": "2014-06-11 16:33:38"
+            "time": "2014-07-02 13:45:06"
+        },
+        {
+            "name": "johnshopkins/wp-utilities",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/johnshopkins/wp-utilities.git",
+                "reference": "ee8e78b1cb35c7caec6d4c5e7ae7c8a9bd56ade2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/johnshopkins/wp-utilities/zipball/ee8e78b1cb35c7caec6d4c5e7ae7c8a9bd56ade2",
+                "reference": "ee8e78b1cb35c7caec6d4c5e7ae7c8a9bd56ade2",
+                "shasum": ""
+            },
+            "require": {
+                "johnshopkins/http-exchange": "0.3.*",
+                "resty/resty": "0.6.*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.0.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "WPUtilities\\": [
+                        "src/",
+                        "tests/"
+                    ]
+                }
+            },
+            "support": {
+                "source": "https://github.com/johnshopkins/wp-utilities/tree/master",
+                "issues": "https://github.com/johnshopkins/wp-utilities/issues"
+            },
+            "time": "2014-06-23 15:17:30"
         },
         {
             "name": "resty/resty",
@@ -134,16 +170,16 @@
     "packages-dev": [
         {
             "name": "phpunit/php-code-coverage",
-            "version": "2.0.8",
+            "version": "2.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "58401826c8cfc8fd689b60026e91c337df374bca"
+                "reference": "ed8ac99ce38c3fd134128c898f7ca74665abef7f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/58401826c8cfc8fd689b60026e91c337df374bca",
-                "reference": "58401826c8cfc8fd689b60026e91c337df374bca",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/ed8ac99ce38c3fd134128c898f7ca74665abef7f",
+                "reference": "ed8ac99ce38c3fd134128c898f7ca74665abef7f",
                 "shasum": ""
             },
             "require": {
@@ -195,7 +231,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2014-05-26 14:55:24"
+            "time": "2014-06-29 08:14:40"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -455,16 +491,16 @@
         },
         {
             "name": "phpunit/phpunit-mock-objects",
-            "version": "2.0.9",
+            "version": "2.0.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit-mock-objects.git",
-                "reference": "a01285d0b705af5963367451088508b6d4e417f2"
+                "reference": "e60bb929c50ae4237aaf680a4f6773f4ee17f0a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/a01285d0b705af5963367451088508b6d4e417f2",
-                "reference": "a01285d0b705af5963367451088508b6d4e417f2",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/e60bb929c50ae4237aaf680a4f6773f4ee17f0a2",
+                "reference": "e60bb929c50ae4237aaf680a4f6773f4ee17f0a2",
                 "shasum": ""
             },
             "require": {
@@ -508,7 +544,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2014-06-07 16:22:54"
+            "time": "2014-06-12 07:19:48"
         },
         {
             "name": "sebastian/diff",
@@ -768,7 +804,8 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "johnshopkins/secrets": 20
+        "johnshopkins/secrets": 20,
+        "johnshopkins/wp-utilities": 20
     },
     "platform": [
 
