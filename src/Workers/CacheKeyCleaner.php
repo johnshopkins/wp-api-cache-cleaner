@@ -30,24 +30,28 @@ class CacheKeyCleaner
       parse_str($rawKey, $parsedKey);
 
       if (preg_match($pattern, $rawKey)) {
+        // this object's cache
         $this->clearCache($parsedKey);
         continue;
 
       } else if (isset($parsedKey["parent_of"]) && $parsedKey["parent_of"] == $id) {
-
+        // find this object's parent caches
         $parents = apc_fetch($rawKey);
-
-        foreach ($parents["objects"] as $id) {
-          $id = trim($id, "/");
-          $this->clearObjectCache($id);
-        }
-
-        foreach ($parents["endpoints"] as $endpoint) {
-          $endpoint = trim($endpoint, "/");
-          $this->clearEndpointCache($endpoint);
-        }
       }
     }
+
+    // clear parent cache
+    
+    foreach ($parents["objects"] as $id) {
+      $id = trim($id, "/");
+      $this->clearObjectCache($id);
+    }
+
+    foreach ($parents["endpoints"] as $endpoint) {
+      $endpoint = trim($endpoint, "/");
+      $this->clearEndpointCache($endpoint);
+    }
+
   }
 
   protected function clearEndpointCache($endpoint)
@@ -70,6 +74,7 @@ class CacheKeyCleaner
 
   protected function clearCache($parsedKey)
   {
+    $this->count++;
     $uri = $parsedKey["uri"];
 
     // get rid of non-query string items
