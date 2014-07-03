@@ -6,21 +6,29 @@ use Secrets\Secret;
 class CacheKeyCleaner
 {
   protected $api;
+  protected $endpoints = array();
 
   public function __construct($deps = array())
   {
     $this->api = isset($deps["api"]) ? $deps["api"] : new \WPUtilities\API();
   }
 
-  public function clean($endpoint)
+  public function cleanKeys($endpoint)
   {
     $cacheInfo = apc_cache_info("user");
     $cacheList = $cacheInfo["cache_list"];
 
+    $encodedUri = urlencode($endpoint);
+
     $flatPatterns = array(
-      "uri=%2F" . $endpoint,      // the object
-      "meta_[^=]+=" . $endpoint   // meta lookups on this object
+      // the object/endpoint (123, sections/timeline)
+      "uri=%2F" . $encodedUri
     );
+
+    if (is_int($endpoint)) {
+      // meta lookups on this object
+      $flatPatterns[] = "meta_[^=]+=" . $endpoint;
+    }
 
     foreach ($cacheList as $item) {
 
@@ -37,7 +45,8 @@ class CacheKeyCleaner
        */
       if (preg_match("/(" . implode("|", $flatPatterns) . ")/", $key)) {
         apc_delete($key);
-        $this->clearCache($parsedKey); // what if this is a deleted object?
+        $this->endpoints[] = $key;
+        // $this->clearCache($parsedKey); // what if this is a deleted object?
         continue;
       }
 
@@ -49,35 +58,55 @@ class CacheKeyCleaner
        * object that has the changed object stitched into it. Run the clean function
        * using this new ID to clean out its cache.
        */
-      if (isset($parsedKey["stitched"]) && in_array($endpoint, $parsedKey["stitched"])) {
+      if (isset($parsedKey["stitched"])) {
+
+        $stitched = explode(",", $parsedKey["stitched"]);
+      
+        if (in_array($endpoint, $stitched)) {
+
+          // find which endpoint this object is stitched to (value of cache key)
+          $parentPostId = trim(apc_fetch($key), "/");
+
+          // get rid of this key
+          apc_delete($key);
+
+          // clean the parent endpoint
+          $this->cleanKeys($parentPostId);
+
+        }
         
-        // get rid of prepended "/"
-        $parentPostId = trim(apc_fetch($key), "/");
-
-        // get rid of this key
-        apc_delete($key);
-
-        $this->clean($parentPostId);
-        continue;
       }
 
     }
   }
 
-  public function clearCache($key)
+  public function primeEndpoints()
   {
-    $uri = $key["uri"];
+    $endpoints = array_unique($this->endpoints);
+
+    foreach ($this->endpoints as $endpoint) {
+      $this->clearCache($endpoint);
+    }
+
+  }
+
+  protected function clearCache($endpoint)
+  {
+    parse_str($endpoint, $parsedEndpoint);
+
+    $uri = $parsedEndpoint["uri"];
 
     // get rid of non-query string items
-    unset($key["uri"]);
-    unset($key["stitched"]);
-    unset($key["source"]);
+    unset($parsedEndpoint["uri"]);
+    unset($parsedEndpoint["stitched"]);
+    unset($parsedEndpoint["source"]);
 
-    // Why does this have to be on? The cached should
-    // is deleted by now.
-    $key["clear_cache"] = true;
+    // Why does this have to be on? The cached should is deleted by now.
+    $parsedEndpoint["clear_cache"] = true;
 
-    $query_string = http_build_query($key);
+    $query_string = http_build_query($parsedEndpoint);
+
+    echo "Clearing {$uri}?{$query_string}\n";
 
     $this->api->get($uri, $query_string);
   }
