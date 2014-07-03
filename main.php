@@ -43,8 +43,7 @@ class CacheCleanerMain
     $post = get_post($id);
 
     return $this->gearmanClient->doHighBackground("api_cache_clean", json_encode(array(
-      "post" => $post,
-      "endpoint" => $post->post_type == "acf" ? "relationships" : $id
+      "post" => $post
     )));
     
   }

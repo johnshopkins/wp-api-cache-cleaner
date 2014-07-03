@@ -49,7 +49,7 @@ class CacheCleaner
 
     echo $this->getDate() . " Starting API cache clearing for post #{$workload->post->ID}.\n";
 
-    $result = $this->clearCache($workload);
+    $result = $this->clearCache($workload->post);
     
     if ($result) {
       echo $this->getDate() . " API cache cleared for post #{$workload->post->ID}.\n";
@@ -58,9 +58,9 @@ class CacheCleaner
     }
   }
 
-  public function clearCache($workload)
+  public function clearCache($post)
   {
-    if ($this->isRevision($workload->post)) return false;
+    if ($this->isRevision($post)) return false;
 
     $secrets = Secret::get("jhu", "production", "plugins", "wp-api-cache-cleaner");
 
@@ -68,7 +68,14 @@ class CacheCleaner
     $pw = $secrets->password;
 
     $get = $this->getBase() . "/assets/plugins/wp-api-cache-cleaner/src/Workers/wget_cleaner.php";
-    $response = $this->httpEngine->get($get, array("endpoint" => $workload->endpoint), array($key => $pw))->getBody();
+    
+    $params = array(
+      "endpoint" => $post->post_type == "acf" ? "relationships" : null,
+      "id" => $post->post_type == "acf" ? null : $post->ID,
+      $key => $pw
+    );
+
+    $response = $this->httpEngine->get($get, $params)->getBody();
 
     return true;
   }
