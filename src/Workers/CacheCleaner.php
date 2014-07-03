@@ -46,9 +46,16 @@ class CacheCleaner
   public function clean(\GearmanJob $job)
 {
     $workload = json_decode($job->workload());
+
+    echo $this->getDate() . " Starting API cache clearing for post #{$workload->post->ID}.\n";
+
     $result = $this->clearCache($workload);
     
-    if ($result) echo $this->getDate() . " API cache cleared for post #{$workload->post->ID}.\n";
+    if ($result) {
+      echo $this->getDate() . " API cache cleared for post #{$workload->post->ID}.\n";
+    } else {
+      echo $this->getDate() . " API cache did not need to be cleared for post #{$workload->post->ID} (revision).\n";
+    }
   }
 
   public function clearCache($workload)
