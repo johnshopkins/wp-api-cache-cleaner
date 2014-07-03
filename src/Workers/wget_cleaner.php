@@ -17,7 +17,13 @@ $validator = new \CacheCleaner\Workers\ClearCacheValidator($headers);
 if (!$validator->validate()) die(1);
 
 $cleaner = new \CacheCleaner\Workers\CacheKeyCleaner();
-$cleaner->cleanKeys($_GET["endpoint"]);
-$cleaner->primeEndpoints();
+
+if (!empty($_GET["endpoint"])) {
+  $cleaner->clearEndpointCache($_GET["endpoint"]);
+}
+
+if (!empty($_GET["id"])) {
+  $cleaner->clearObjectCache($_GET["id"]);
+}
 
 die();
