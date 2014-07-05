@@ -71,11 +71,14 @@ class CacheCleaner
     
     $params = array(
       "endpoint" => $post->post_type == "acf" ? "relationships" : null,
-      "id" => $post->post_type == "acf" ? null : $post->ID,
-      $key => $pw
+      "id" => $post->post_type == "acf" ? null : $post->ID
     );
+    
+    $headers = array($key => $pw);
 
-    $response = $this->httpEngine->get($get, $params)->getBody();
+    $result = $this->httpEngine->get($get, $params, $headers)->getBody();
+
+    var_dump(json_decode($result));
 
     return true;
   }
