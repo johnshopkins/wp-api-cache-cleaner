@@ -7,6 +7,7 @@ class CacheKeyCleaner
 {
   protected $api;
   protected $cacheList;
+  protected $logs = array();
 
   public function __construct($deps = array())
   {
@@ -19,11 +20,18 @@ class CacheKeyCleaner
 
   public function clearObjectCache($id)
   {
+    $this->logs[] = "Clearing object cache for: {$id}";
+
     $pattern = "/uri=%2F" . $id . "/";
 
     $parents = array();
 
+    $foundObject = false;
+    $foundParents = false;
+
     foreach ($this->cacheList as $item) {
+
+      if ($foundObject && $foundParents) break;
 
       $rawKey = $item["info"];
       if (!preg_match("/source=wpapi/", $rawKey)) continue;
@@ -32,13 +40,18 @@ class CacheKeyCleaner
       if (preg_match($pattern, $rawKey)) {
         // this object's cache
         $this->clearCache($parsedKey);
+        $fountObject = true;
         continue;
 
       } else if (isset($parsedKey["parent_of"]) && $parsedKey["parent_of"] == $id) {
         // find this object's parent caches
         $parents = apc_fetch($rawKey);
+        $foundParents = true;
       }
+
     }
+
+    if (!$parents) return;
 
     // clear parent cache
     
@@ -52,10 +65,14 @@ class CacheKeyCleaner
       $this->clearEndpointCache($endpoint);
     }
 
+    return $this->logs;
+
   }
 
   protected function clearEndpointCache($endpoint)
   {
+    $this->logs[] = "Clearing endpoint cache for: {$endpoint}";
+
     $pattern = "/uri=%2F" . urlencode($endpoint) . "/";
 
     foreach ($this->cacheList as $item) {
@@ -70,6 +87,8 @@ class CacheKeyCleaner
 
       }
     }
+
+    return $this->logs;
   }
 
   protected function clearCache($parsedKey)
@@ -82,14 +101,13 @@ class CacheKeyCleaner
     unset($parsedKey["stitched"]);
     unset($parsedKey["source"]);
 
-    // Must use this so that all subobjects' cache is also cleared
-    // $parsedKey["clear_cache"] = true;
+    $parsedKey["clear_cache"] = true;
 
     $query_string = http_build_query($parsedKey);
 
-    echo "Clearing {$uri}?{$query_string}\n";
+    $this->logs[] = "Clearing {$uri}?{$query_string}\n";
 
-    // $this->api->get($uri, $query_string);
+    $this->api->get($uri, $query_string);
   }
 
 }
