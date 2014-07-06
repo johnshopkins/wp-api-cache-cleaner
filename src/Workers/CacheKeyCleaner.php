@@ -7,6 +7,7 @@ class CacheKeyCleaner
 {
   protected $api;
   protected $cacheList;
+  protected $endpointsToclear = array();
   public $logs = array();
 
   public function __construct($deps = array())
@@ -54,7 +55,7 @@ class CacheKeyCleaner
     if (!$parents) return;
 
     // clear parent cache
-    
+
     foreach ($parents["objects"] as $id) {
       $id = trim($id, "/");
       $this->clearObjectCache($id);
@@ -62,14 +63,16 @@ class CacheKeyCleaner
 
     foreach ($parents["endpoints"] as $endpoint) {
       $endpoint = trim($endpoint, "/");
-      $this->clearEndpointCache($endpoint);
+      if (!in_array($endpoint, $this->endpointsToclear)) {
+        $this->endpointsToclear[] = $endpoint;
+      }
     }
 
     return $this->logs;
 
   }
 
-  protected function clearEndpointCache($endpoint)
+  public function clearEndpointCache($endpoint)
   {
     $this->logs[] = "Clearing endpoint cache for: {$endpoint}";
 
@@ -89,6 +92,13 @@ class CacheKeyCleaner
     }
 
     return $this->logs;
+  }
+
+  public function clearFoundEndpoints()
+  {
+    foreach ($this->endpointsToclear as $endpoint) {
+      $this->clearEndpointCache($endpoint);
+    }
   }
 
   protected function clearCache($parsedKey)

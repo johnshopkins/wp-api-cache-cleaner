@@ -21,6 +21,7 @@ if (!empty($_GET["endpoint"])) {
 
 if (!empty($_GET["id"])) {
   $clearedIds = $cleaner->clearObjectCache($_GET["id"]);
+  $clearedEndpoints = $cleaner->clearFoundEndpoints();
   $logs = $cleaner->logs;
 }
 
