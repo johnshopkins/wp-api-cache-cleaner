@@ -7,7 +7,7 @@ class CacheKeyCleaner
 {
   protected $api;
   protected $cacheList;
-  protected $logs = array();
+  public $logs = array();
 
   public function __construct($deps = array())
   {

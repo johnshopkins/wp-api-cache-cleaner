@@ -15,13 +15,15 @@ if (!$validator->validate()) die(1);
 $cleaner = new \CacheCleaner\Workers\CacheKeyCleaner();
 
 if (!empty($_GET["endpoint"])) {
-  $result = $cleaner->clearEndpointCache($_GET["endpoint"]);
+  $cleaner->clearEndpointCache($_GET["endpoint"]);
+  $logs = $cleaner->logs;
 }
 
 if (!empty($_GET["id"])) {
-  $result = $cleaner->clearObjectCache($_GET["id"]);
+  $clearedIds = $cleaner->clearObjectCache($_GET["id"]);
+  $logs = $cleaner->logs;
 }
 
 // echo out the logs
-echo json_encode($result);
+echo json_encode($logs);
 die();
