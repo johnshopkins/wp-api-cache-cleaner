@@ -14,14 +14,14 @@ if (!$validator->validate()) die(1);
 
 $cleaner = new \CacheCleaner\Workers\CacheKeyCleaner();
 
-if (!empty($_GET["endpoint"])) {
-  $cleaner->clearEndpointCache($_GET["endpoint"]);
-  $logs = $cleaner->logs;
-}
-
 if (!empty($_GET["id"])) {
   $clearedIds = $cleaner->clearObjectCache($_GET["id"]);
   $clearedEndpoints = $cleaner->clearFoundEndpoints();
+  $logs = $cleaner->logs;
+}
+
+if (!empty($_GET["endpoint"])) {
+  $cleaner->clearEndpointCache($_GET["endpoint"]);
   $logs = $cleaner->logs;
 }
 

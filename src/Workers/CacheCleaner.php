@@ -69,8 +69,10 @@ class CacheCleaner
 
     $get = $this->getBase() . "/assets/plugins/wp-api-cache-cleaner/src/Workers/wget_cleaner.php";
     
+    $endpoint = $post->post_type == "acf" ? "relationships" : $post->post_type;
+    
     $params = array(
-      "endpoint" => $post->post_type == "acf" ? "relationships" : null,
+      "endpoint" => $endpoint,
       "id" => $post->post_type == "acf" ? null : $post->ID
     );
     
@@ -78,7 +80,7 @@ class CacheCleaner
 
     $result = $this->httpEngine->get($get, $params, $headers)->getBody();
 
-    var_dump(json_decode($result));
+    print_r(json_decode($result));
 
     return true;
   }
