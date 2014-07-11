@@ -1,9 +1,9 @@
 <?php
 
-namespace CacheCleaner\Workers;
+namespace CacheCleaner\Utilities;
 use Secrets\Secret;
 
-class ClearCacheValidator
+class Validator
 {
   public function __construct($headers)
   {

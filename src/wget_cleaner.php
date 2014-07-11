@@ -1,18 +1,24 @@
 <?php
+ini_set('display_errors',1); 
+error_reporting(E_ALL);
+?>
 
-// autoload stuff
-$root = dirname(dirname(dirname(dirname(dirname(dirname(__DIR__))))));
+<?php
+
+$root = dirname(dirname(dirname(dirname(dirname(__DIR__)))));
+
+// load wordpress for $jhu_cacher and ENV
 define("WP_USE_THEMES", false);
 require $root . "/vendor/autoload.php";
-require $root . "/vendor/wordpress/wordpress/wp-blog-header.php"; // we need this for the ENV
+require $root . "/vendor/wordpress/wordpress/wp-blog-header.php";
 
 // validate request
 $headers = apache_request_headers();
-$validator = new \CacheCleaner\Workers\ClearCacheValidator($headers);
+$validator = new \CacheCleaner\Utilities\Validator($headers);
 
 if (!$validator->validate()) die(1);
 
-$cleaner = new \CacheCleaner\Workers\CacheKeyCleaner();
+$cleaner = new \CacheCleaner\Utilities\CacheCleaner($jhu_cacher);
 
 if (!empty($_GET["id"])) {
   $clearedIds = $cleaner->clearObjectCache($_GET["id"]);

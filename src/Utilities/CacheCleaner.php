@@ -1,22 +1,26 @@
 <?php
 
-namespace CacheCleaner\Workers;
+namespace CacheCleaner\Utilities;
 use Secrets\Secret;
 
-class CacheKeyCleaner
+/**
+ * The utility called by wget_cleaner.php that
+ * does the API endpoint repriming.
+ */
+class CacheCleaner
 {
+  protected $cache;
+  protected $cacheKeys = array();
+
   protected $api;
-  protected $cacheList;
   protected $endpointsToclear = array();
   public $logs = array();
 
-  public function __construct($deps = array())
+  public function __construct($cache, $deps = array())
   {
+    $this->cache = $cache;
+    $this->cacheKeys = $this->cache->getKeys();
     $this->api = isset($deps["api"]) ? $deps["api"] : new \WPUtilities\API();
-
-    $cacheInfo = apc_cache_info("user");
-    $this->cacheList = $cacheInfo["cache_list"];
-
   }
 
   public function clearObjectCache($id)
@@ -27,14 +31,18 @@ class CacheKeyCleaner
 
     $parents = array();
 
+    /**
+     * To clear an object, we need to find its key and the key that
+     * keeps track of its parents. After we find those, both of these
+     * variables will be true and we can break out of the foreach loop.
+     */
     $foundObject = false;
     $foundParents = false;
 
-    foreach ($this->cacheList as $item) {
+    foreach ($this->cacheKeys as $rawKey) {
 
       if ($foundObject && $foundParents) break;
 
-      $rawKey = $item["info"];
       if (!preg_match("/source=wpapi/", $rawKey)) continue;
       parse_str($rawKey, $parsedKey);
 
@@ -78,9 +86,8 @@ class CacheKeyCleaner
 
     $pattern = "/uri=%2F" . urlencode($endpoint) . "/";
 
-    foreach ($this->cacheList as $item) {
+    foreach ($this->cacheKeys as $rawKey) {
 
-      $rawKey = $item["info"];
       if (!preg_match("/source=wpapi/", $rawKey)) continue;
       parse_str($rawKey, $parsedKey);
 
@@ -113,7 +120,12 @@ class CacheKeyCleaner
 
     $parsedKey["clear_cache"] = true;
 
-    $query_string = http_build_query($parsedKey);
+    // convert arrays to comma-separated lists
+    $params = array_map(function ($param) {
+      return is_array($param) ? implode(",", $param) : $param;
+    }, $parsedKey);
+
+    $query_string = http_build_query($params);
 
     $this->logs[] = "Clearing {$uri}?{$query_string}\n";
 
