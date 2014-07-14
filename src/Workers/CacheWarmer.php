@@ -17,24 +17,24 @@ class CacheWarmer extends BaseWorker
   protected $contentTypes = array(
 
     // no embeds
-    "attachment",
-    "block",
-    "club",
-    "division",
-    "related_content",
+    // "attachment",
+    // "block",
+    // "club",
+    // "division",
+    // "related_content",
 
-    // embeds
+    // // embeds
     "fact",             // attachment
-    "field_of_study",   // division
-    "instagram_media",  // location
-    "location",         // attachment
-    "timeline_event",   // attachment
+    // "field_of_study",   // division
+    // "instagram_media",  // location
+    // "location",         // attachment
+    // "timeline_event",   // attachment
 
-    "map",              // attachment, location
-    "page",             // block, attachment
+    // "map",              // attachment, location
+    // "page",             // block, attachment
     
-    "person",           // attachment, field_of_study, club, division
-    "quote"            // person
+    // "person",           // attachment, field_of_study, club, division
+    // "quote"            // person
     
   );
 
@@ -83,7 +83,7 @@ class CacheWarmer extends BaseWorker
     echo $this->getDate() . " Finished warming cache.\n";
   }
 
-  protected function warmObjects($type, $status, $paged = 0)
+  protected function warmObjects($type, $status, $paged = 1)
   {
     $result = $this->wordpress_query->run(array(
       "post_type" => $type,
@@ -102,7 +102,9 @@ class CacheWarmer extends BaseWorker
 
     }
 
-    if ($result->max_num_pages < $paged + 1) {
+    var_dump($result->max_num_pages . " - " . $paged);
+
+    if ($result->max_num_pages > $paged) {
       $this->warmObjects($type, $status, $paged + 1);
     } else {
       return true;
