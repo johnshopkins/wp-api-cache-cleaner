@@ -17,24 +17,24 @@ class CacheWarmer extends BaseWorker
   protected $contentTypes = array(
 
     // no embeds
-    "attachment",
-    "block",
-    "club",
+    // "attachment",
+    // "block",
+    // "club",
     "division",
-    "related_content",
+    // "related_content",
 
-    // embeds
-    "fact",             // attachment
-    "field_of_study",   // division
-    "instagram_media",  // location
-    "location",         // attachment
-    "timeline_event",   // attachment
+    // // embeds
+    // "fact",             // attachment
+    // "field_of_study",   // division
+    // "instagram_media",  // location
+    // "location",         // attachment
+    // "timeline_event",   // attachment
 
-    "map",              // attachment, location
-    "page",             // block, attachment
+    // "map",              // attachment, location
+    // "page",             // block, attachment
     
-    "person",           // attachment, field_of_study, club, division
-    "quote"            // person
+    // "person",           // attachment, field_of_study, club, division
+    // "quote"            // person
     
   );
 
@@ -102,7 +102,7 @@ class CacheWarmer extends BaseWorker
 
     }
 
-    if ($result->max_num_pages > $paged) {
+    if ($result->max_num_pages < $paged + 1) {
       $this->warmObjects($type, $status, $paged + 1);
     } else {
       return true;
