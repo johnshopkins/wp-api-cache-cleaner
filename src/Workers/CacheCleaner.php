@@ -4,7 +4,7 @@ namespace CacheCleaner\Workers;
 use Secrets\Secret;
 
 /**
- * Gearman Job
+ * Gearman Worker
  */
 class CacheCleaner
 {
@@ -67,7 +67,7 @@ class CacheCleaner
     $key = $secrets->key;
     $pw = $secrets->password;
 
-    $get = $this->getBase() . "/assets/plugins/wp-api-cache-cleaner/src/Workers/wget_cleaner.php";
+    $get = $this->getBase() . "/assets/plugins/wp-api-cache-cleaner/src/wget_cleaner.php";
     
     $endpoint = $post->post_type == "acf" ? "relationships" : $post->post_type;
     
