@@ -4,21 +4,39 @@ namespace CacheCleaner;
 
 class Warmer
 {
-  protected $endpoints = array(
-    "page",
+  /**
+   * In order of least embedded objects to most
+   * @var array
+   */
+  protected $contentTypes = array(
+
+    // no embeds
     "attachment",
     "block",
     "club",
-    "division",
-    "fact",
-    "field_of_study",
-    "instagram_media",
-    "location",
-    "map",
-    "person",
-    "quote",
+    "division"
     "related_content",
-    "timeline_event"
+
+    // embeds
+    "fact",             // attachment
+    "field_of_study",   // division
+    "instagram_media",  // location
+    "location",         // attachment
+    "timeline_event",   // attachment
+
+    "map",              // attachment, location
+    "page",             // block, attachment
+    
+    "person",           // attachment, field_of_study, club, division
+    "quote",            // person
+    
+  );
+
+  protected $endpoints = array(
+    "sections/maps",
+    "sections/profiles",
+    "sections/timeline",
+    "sections/why-hopkins"
   );
 
   protected $api;
@@ -30,17 +48,22 @@ class Warmer
 
   public function warmCache()
   {
-    foreach ($this->endpoints as $endpoint) {
-      $this->get($endpoint);
+    // content types
+    $params = array("per_page" => -1);
+    foreach ($this->contentTypes as $type) {
+      $this->api->get($type, $params);
     }
-  }
 
-  protected function get($endpoint, $params = array())
-  {
-    $params["per_page"] = 1;
-    $response = $this->api->get($endpoint, $params);
-
-    print_r($response); die();
-
+    // if this is only used for elastic search, don't do it
+    // $params["returnEmbedded"] = false;
+    // foreach ($this->contentTypes as $type) {
+    //   $this->get($type, $params);
+    // }
+    
+    // custom endpoints
+    $params = array();
+    foreach ($this->endpoints as $endpoint) {
+      $this->api->get($endpoint, $params);
+    }
   }
 }
