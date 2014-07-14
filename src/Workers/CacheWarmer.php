@@ -17,24 +17,24 @@ class CacheWarmer extends BaseWorker
   protected $contentTypes = array(
 
     // no embeds
-    // "attachment",
-    // "block",
-    // "club",
-    // "division",
-    // "related_content",
+    "attachment",
+    "block",
+    "club",
+    "division",
+    "related_content",
 
-    // // embeds
+    // embeds
     "fact",             // attachment
-    // "field_of_study",   // division
-    // "instagram_media",  // location
-    // "location",         // attachment
-    // "timeline_event",   // attachment
+    "field_of_study",   // division
+    "instagram_media",  // location
+    "location",         // attachment
+    "timeline_event",   // attachment
 
-    // "map",              // attachment, location
-    // "page",             // block, attachment
+    "map",              // attachment, location
+    "page",             // block, attachment
     
-    // "person",           // attachment, field_of_study, club, division
-    // "quote"            // person
+    "person",           // attachment, field_of_study, club, division
+    "quote"            // person
     
   );
 
