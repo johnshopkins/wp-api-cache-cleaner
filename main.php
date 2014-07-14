@@ -15,6 +15,11 @@ class CacheCleanerMain
   {
     $this->logger = $logger;
 
+    // Create admin pages
+    add_action("wp_loaded", function () {
+      new \CacheCleaner\Admin();
+    });
+
     $this->gearmanClient = isset($injection["gearmanClient"]) ? $injection["gearmanClient"] : new \GearmanClient();
     $this->gearmanClient->addServer("127.0.0.1");
 
@@ -23,6 +28,9 @@ class CacheCleanerMain
 
   protected function addHooks()
   {
+    // warm button in admin
+    add_action("admin_post_wp_api_cache_cleaner_warm", array($this, "warm_cache"));
+
     // posts
     add_action("save_post", array($this, "clear_cache"));
 
@@ -36,6 +44,7 @@ class CacheCleanerMain
     // attachments
     add_action("add_attachment", array($this, "clear_cache"));
     add_action("edit_attachment", array($this, "clear_cache"));
+
   }
 
   public function clear_cache($id)
@@ -46,6 +55,14 @@ class CacheCleanerMain
       "post" => $post
     )));
     
+  }
+
+  public function warm_cache()
+  {
+    $this->gearmanClient->doNormal("api_cache_warm", json_encode(array()));
+
+    $redirect = admin_url("options-general.php?page=api-cache");
+    header("Location: {$redirect}");
   }
 
 }
