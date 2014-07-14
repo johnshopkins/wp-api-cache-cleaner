@@ -6,20 +6,8 @@ use Secrets\Secret;
 /**
  * Gearman Worker
  */
-class CacheCleaner
+class CacheCleaner extends BaseWorker
 {
-  /**
-   * Gearman worker
-   * @var object
-   */
-  protected $worker;
-
-  /**
-   * Monolog
-   * @var object
-   */
-  protected $logger;
-
   /**
   * Post Utility
   * @var object
@@ -32,14 +20,18 @@ class CacheCleaner
    */
   protected $httpEngine;
 
-  public function __construct($settings = array(), $injection = array())
+  public function __construct($settings = array(), $deps = array())
   {
-    $this->worker = $settings["worker"];
-    $this->logger = $settings["logger"];
+    $this->httpEngine = isset($deps["httpEngine"]) ? $deps["httpEngine"] : new \HttpExchange\Adapters\Resty(new \Resty\Resty());
+    $this->post_util = isset($deps["post_util"]) ? $deps["post_util"] : new \WPUtilities\Post();
     
-    $this->httpEngine = isset($injection["httpEngine"]) ? $injection["httpEngine"] : new \HttpExchange\Adapters\Resty(new \Resty\Resty());
-    $this->post_util = isset($injection["post_util"]) ? $injection["post_util"] : new \WPUtilities\Post();
+    parent::__construct($settings, $deps);
+  }
+    
 
+  public function addFunctions()
+  {
+    parent::addFunctions();
     $this->worker->addFunction("api_cache_clean", array($this, "clean"));
   }
 
@@ -94,11 +86,6 @@ class CacheCleaner
     } else {
       return "http://jhu.edu";
     }
-  }
-
-  protected function getDate()
-  {
-    return date("Y-m-d H:i:s");
   }
 
   /**
