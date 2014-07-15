@@ -54,7 +54,7 @@ class CacheCleaner
 
       } else if (isset($parsedKey["parent_of"]) && $parsedKey["parent_of"] == $id) {
         // find this object's parent caches
-        $parents = $this->cache->fetch("parent_of=8011&source=wpapi", false);
+        $parents = $this->cache->fetch($rawKey, false);
         $foundParents = true;
       }
 
