@@ -26,8 +26,8 @@ class CacheWarmer extends BaseWorker
     // embeds
     "fact",             // attachment
     "field_of_study",   // division
-    "instagram_media",  // location
     "location",         // attachment
+    "instagram_media",  // location
     "timeline_event",   // attachment
 
     "map",              // attachment, location
