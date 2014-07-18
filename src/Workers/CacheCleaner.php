@@ -39,6 +39,8 @@ class CacheCleaner extends BaseWorker
 {
     $workload = json_decode($job->workload());
 
+    print_r($workload->post);
+
     echo $this->getDate() . " Starting API cache clearing for post #{$workload->post->ID}.\n";
 
     $result = $this->clearCache($workload->post);
@@ -48,16 +50,30 @@ class CacheCleaner extends BaseWorker
     } else {
       echo $this->getDate() . " API cache did not need to be cleared for post #{$workload->post->ID} (revision).\n";
     }
+
+    echo "\n\n\n";
   }
 
   public function clearCache($post)
   {
-    if ($this->isRevision($post)) return false;
+    echo $this->getDate() . " Checking Revision status for #{$post->ID}.\n";
+
+    if ($this->isRevision($post)) {
+      echo $this->getDate() . " Post is a revision, skipping #{$post->ID}.\n";
+      return false;
+    } else {
+      echo $this->getDate() . " POst is not a revision, continue #{$post->ID}.\n";
+    }
+
+    echo $this->getDate() . " Fetching secrets... #{$post->ID}.\n";
 
     $secrets = Secret::get("jhu", "production", "plugins", "wp-api-cache-cleaner");
 
     $key = $secrets->key;
     $pw = $secrets->password;
+
+    echo $this->getDate() . " Key fetched {$key} #{$post->ID}.\n";
+    echo $this->getDate() . " Password fetched {$pw} #{$post->ID}.\n";
 
     $get = $this->getBase() . "/assets/plugins/wp-api-cache-cleaner/src/wget_cleaner.php";
     
