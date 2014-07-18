@@ -49,6 +49,7 @@ class CacheWarmer extends BaseWorker
   {
     $this->api = isset($deps["api"]) ? $deps["api"] : new \WPUtilities\API();
     $this->wordpress_query = isset($deps["wordpress_query"]) ? $deps["wordpress_query"] : new \WPUtilities\WPQueryWrapper();
+    $this->cache = $settings["cache"];
 
     parent::__construct($settings, $deps);
   }
@@ -70,6 +71,10 @@ class CacheWarmer extends BaseWorker
   public function warmCache(\GearmanJob $job)
   {
     echo $this->getDate() . " Starting warming cache...\n";
+    
+    echo $this->getDate() . " Clearing cache...\n";
+    $this->cache->clear();
+    echo $this->getDate() . " Cache cleared.\n";
 
     foreach ($this->contentTypes as $type) {
       $status = $type == "attachment" ? "inherit" : "publish";
