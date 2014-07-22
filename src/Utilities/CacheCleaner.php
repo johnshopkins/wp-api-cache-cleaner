@@ -14,6 +14,14 @@ class CacheCleaner
 
   protected $api;
   protected $endpointsToclear = array();
+
+  /**
+   * Keep track of IDs that have already been cleared to
+   * prevent recurssion from IDs that refrence each other.
+   * @var array
+   */
+  protected $clearedIds = array();
+
   public $logs = array();
 
   public function __construct($cache, $deps = array())
@@ -25,6 +33,8 @@ class CacheCleaner
 
   public function clearObjectCache($id)
   {
+    if (in_array($id, $this->clearedIds)) return;
+
     $this->logs[] = "Clearing object cache for: {$id}";
 
     $pattern = "/uri=%2F" . $id . "/";
@@ -50,6 +60,7 @@ class CacheCleaner
         // this object's cache
         $this->clearCache($parsedKey);
         $fountObject = true;
+        $this->clearedIds[] = $id;
         continue;
 
       } else if (isset($parsedKey["parent_of"]) && $parsedKey["parent_of"] == $id) {
@@ -129,7 +140,7 @@ class CacheCleaner
 
     $this->logs[] = "Clearing {$uri}?{$query_string}\n";
 
-    $this->api->get($uri, $query_string);
+    // $this->api->get($uri, $query_string);
   }
 
 }
