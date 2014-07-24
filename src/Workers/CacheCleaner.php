@@ -65,15 +65,10 @@ class CacheCleaner extends BaseWorker
       echo $this->getDate() . " POst is not a revision, continue #{$post->ID}.\n";
     }
 
-    echo $this->getDate() . " Fetching secrets... #{$post->ID}.\n";
-
     $secrets = Secret::get("jhu", "production", "plugins", "wp-api-cache-cleaner");
 
     $key = $secrets->key;
     $pw = $secrets->password;
-
-    echo $this->getDate() . " Key fetched {$key} #{$post->ID}.\n";
-    echo $this->getDate() . " Password fetched {$pw} #{$post->ID}.\n";
 
     $get = $this->getBase() . "/assets/plugins/wp-api-cache-cleaner/src/wget_cleaner.php";
     

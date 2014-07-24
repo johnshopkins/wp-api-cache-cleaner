@@ -140,7 +140,7 @@ class CacheCleaner
 
     $this->logs[] = "Clearing {$uri}?{$query_string}\n";
 
-    // $this->api->get($uri, $query_string);
+    $this->api->get($uri, $query_string);
   }
 
 }
