@@ -70,6 +70,9 @@ class CacheWarmer extends BaseWorker
    */
   public function warmCache(\GearmanJob $job)
   {
+    $workload = json_decode($job->workload());
+    $types = $workload->types;
+
     echo $this->getDate() . " Starting warming cache...\n";
     
     echo $this->getDate() . " Clearing cache...\n";
@@ -77,6 +80,9 @@ class CacheWarmer extends BaseWorker
     echo $this->getDate() . " Cache cleared.\n";
 
     foreach ($this->contentTypes as $type) {
+
+      if (!in_array($type, $types)) continue;
+
       $status = $type == "attachment" ? "inherit" : "publish";
       $this->warmObjects($type, $status);
     }

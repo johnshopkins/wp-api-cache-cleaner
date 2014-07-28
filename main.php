@@ -59,7 +59,14 @@ class CacheCleanerMain
 
   public function warm_cache()
   {
-    $this->gearmanClient->doNormal("api_cache_warm", json_encode(array()));
+    // get checked types
+    if (isset($_POST["action"])) unset($_POST["action"]);
+    if (isset($_POST["submit"])) unset($_POST["submit"]);
+    $types = array_keys($_POST);
+    
+    $this->gearmanClient->doNormal("api_cache_warm", json_encode(array(
+      "types" => $types
+    )));
 
     $redirect = admin_url("options-general.php?page=api-cache");
     header("Location: {$redirect}");
