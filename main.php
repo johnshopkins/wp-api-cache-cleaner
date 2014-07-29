@@ -6,6 +6,8 @@ Author: johnshopkins
 Version: 0.1
 */
 
+use \Secrets\Secret;
+
 class CacheCleanerMain
 {
   protected $logger;
@@ -21,7 +23,18 @@ class CacheCleanerMain
     });
 
     $this->gearmanClient = isset($injection["gearmanClient"]) ? $injection["gearmanClient"] : new \GearmanClient();
-    $this->gearmanClient->addServer("127.0.0.1");
+    
+    $servers = Secret::get("jhu", ENV, "servers");
+
+    if ($servers) {
+
+      foreach ($servers as $server) {
+        $this->gearmanClient->addServer($server->hostname);
+      }
+
+    } else {
+      $this->logger->addAlert("Servers unavailable for Gearman " . __FILE__ . " on line " + __LINE__);
+    }
 
     $this->addHooks();
   }
