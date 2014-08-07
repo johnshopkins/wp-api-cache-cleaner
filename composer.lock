@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7a502be2e4cb607a622efd8aaccca22c",
+    "hash": "efcbf592b3b4b43b2b4dec63c252b86d",
     "packages": [
         {
             "name": "johnshopkins/http-exchange",
@@ -41,7 +41,7 @@
                 },
                 {
                     "name": "Jen Wachter",
-                    "email": "jwachter@jhu.edu",
+                    "email": "jenleighkelly@gmail.com",
                     "homepage": "http://www.jenwachter.com"
                 }
             ],
@@ -62,12 +62,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:johnshopkins/secrets.git",
-                "reference": "41d25ff2d980e47091d7bc6c435f59d5548fa89c"
+                "reference": "0e757a93f2ae351de6760276577152e64d8692a5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/johnshopkins/secrets/zipball/41d25ff2d980e47091d7bc6c435f59d5548fa89c",
-                "reference": "41d25ff2d980e47091d7bc6c435f59d5548fa89c",
+                "url": "https://api.github.com/repos/johnshopkins/secrets/zipball/0e757a93f2ae351de6760276577152e64d8692a5",
+                "reference": "0e757a93f2ae351de6760276577152e64d8692a5",
                 "shasum": ""
             },
             "type": "library",
@@ -81,20 +81,20 @@
                 "source": "https://github.com/johnshopkins/secrets/tree/master",
                 "issues": "https://github.com/johnshopkins/secrets/issues"
             },
-            "time": "2014-07-02 13:45:06"
+            "time": "2014-08-06 15:15:50"
         },
         {
             "name": "johnshopkins/wp-utilities",
-            "version": "dev-master",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/johnshopkins/wp-utilities.git",
-                "reference": "ee8e78b1cb35c7caec6d4c5e7ae7c8a9bd56ade2"
+                "reference": "f5e841d7976cf2cf02cbdea45a3367af2f078b49"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/johnshopkins/wp-utilities/zipball/ee8e78b1cb35c7caec6d4c5e7ae7c8a9bd56ade2",
-                "reference": "ee8e78b1cb35c7caec6d4c5e7ae7c8a9bd56ade2",
+                "url": "https://api.github.com/repos/johnshopkins/wp-utilities/zipball/f5e841d7976cf2cf02cbdea45a3367af2f078b49",
+                "reference": "f5e841d7976cf2cf02cbdea45a3367af2f078b49",
                 "shasum": ""
             },
             "require": {
@@ -114,10 +114,10 @@
                 }
             },
             "support": {
-                "source": "https://github.com/johnshopkins/wp-utilities/tree/master",
+                "source": "https://github.com/johnshopkins/wp-utilities/tree/v1.0.0",
                 "issues": "https://github.com/johnshopkins/wp-utilities/issues"
             },
-            "time": "2014-06-23 15:17:30"
+            "time": "2014-08-07 15:21:32"
         },
         {
             "name": "resty/resty",
@@ -170,16 +170,16 @@
     "packages-dev": [
         {
             "name": "phpunit/php-code-coverage",
-            "version": "2.0.9",
+            "version": "2.0.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "ed8ac99ce38c3fd134128c898f7ca74665abef7f"
+                "reference": "6d196af48e8c100a3ae881940123e693da5a9217"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/ed8ac99ce38c3fd134128c898f7ca74665abef7f",
-                "reference": "ed8ac99ce38c3fd134128c898f7ca74665abef7f",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/6d196af48e8c100a3ae881940123e693da5a9217",
+                "reference": "6d196af48e8c100a3ae881940123e693da5a9217",
                 "shasum": ""
             },
             "require": {
@@ -231,7 +231,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2014-06-29 08:14:40"
+            "time": "2014-08-06 06:39:42"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -751,17 +751,17 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.5.0",
+            "version": "v2.5.3",
             "target-dir": "Symfony/Component/Yaml",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml.git",
-                "reference": "b4b09c68ec2f2727574544ef0173684281a5033c"
+                "reference": "5a75366ae9ca8b4792cd0083e4ca4dff9fe96f1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/b4b09c68ec2f2727574544ef0173684281a5033c",
-                "reference": "b4b09c68ec2f2727574544ef0173684281a5033c",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/5a75366ae9ca8b4792cd0083e4ca4dff9fe96f1f",
+                "reference": "5a75366ae9ca8b4792cd0083e4ca4dff9fe96f1f",
                 "shasum": ""
             },
             "require": {
@@ -784,33 +784,25 @@
             ],
             "authors": [
                 {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com",
-                    "homepage": "http://fabien.potencier.org",
-                    "role": "Lead Developer"
-                },
-                {
                     "name": "Symfony Community",
                     "homepage": "http://symfony.com/contributors"
+                },
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
                 }
             ],
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
-            "time": "2014-05-16 14:25:18"
+            "time": "2014-08-05 09:00:40"
         }
     ],
-    "aliases": [
-
-    ],
+    "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
         "johnshopkins/secrets": 20,
         "johnshopkins/wp-utilities": 20
     },
-    "platform": [
-
-    ],
-    "platform-dev": [
-
-    ]
+    "platform": [],
+    "platform-dev": []
 }

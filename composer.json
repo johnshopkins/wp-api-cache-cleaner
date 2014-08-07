@@ -23,7 +23,7 @@
   "require": {
     "johnshopkins/http-exchange": "0.3.*",
     "johnshopkins/secrets": "dev-master",
-    "johnshopkins/wp-utilities": "dev-master",
+    "johnshopkins/wp-utilities": "dev-develop",
     "resty/resty": "0.6.*"
   },
   "require-dev": {
