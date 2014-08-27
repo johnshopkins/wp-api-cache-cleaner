@@ -1,5 +1,6 @@
 {
   "name": "johnshopkins/wp-api-cache-cleaner",
+  "version": "1.0.0",
   "type": "wordpress-plugin",
   "description": "",
   "license": "MIT",
@@ -30,8 +31,11 @@
     "phpunit/phpunit": "4.0.*"
   },
   "autoload": {
-    "psr-4" : {
-      "CacheCleaner\\" : ["src/", "tests/"]
+    "psr-4": {
+      "CacheCleaner\\": [
+        "src/",
+        "tests/"
+      ]
     }
   }
 }
