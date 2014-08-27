@@ -90,12 +90,14 @@ class CacheCleaner extends BaseWorker
 
   protected function getBase()
   {
-    if (ENV == "local") {
-      return "http://local.jhu.edu";
-    } else if (ENV == "staging") {
-      return "http://staging.jhu.edu";
+    if (ENV == 'local') {
+      return "https://local.jhu.edu";
+    } elseif (ENV == 'staging') {
+      return "https://staging.jhu.edu";
+    } elseif (ENV == 'beta') {
+      return "https://beta.jhu.edu";
     } else {
-      return "http://jhu.edu";
+      return "https://jhu.edu";
     }
   }
 
