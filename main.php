@@ -33,7 +33,7 @@ class CacheCleanerMain
       }
 
     } else {
-      $this->logger->addAlert("Servers unavailable for Gearman " . __FILE__ . " on line " . __LINE__);
+      $this->logger->addCritical("Servers unavailable for Gearman " . __FILE__ . " on line " . __LINE__);
     }
 
     $this->addHooks();
