@@ -18,7 +18,6 @@ class CacheWarmer extends BaseWorker
 
     // no embeds
     "attachment",
-    "block",
     "club",
     "division",
     "related_content",
@@ -34,7 +33,10 @@ class CacheWarmer extends BaseWorker
     "page",             // block, attachment
     
     "person",           // attachment, field_of_study, club, division
-    "quote"            // person
+    "quote",            // person
+
+    "block",            // many things
+    "collection"
     
   );
 
