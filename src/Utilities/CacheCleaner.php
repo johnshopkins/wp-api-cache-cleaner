@@ -138,7 +138,7 @@ class CacheCleaner
 
     $query_string = http_build_query($params);
 
-    $this->logs[] = "Clearing {$uri}?{$query_string}\n";
+    $this->logs[] = "Clearing {$uri}?{$query_string}";
 
     $this->api->get($uri, $query_string);
   }
