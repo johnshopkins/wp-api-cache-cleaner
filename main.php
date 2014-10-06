@@ -116,4 +116,4 @@ class CacheCleanerMain
 
 }
 
-new CacheCleanerMain($wp_logger);
+$jhu_cache_clearer = new CacheCleanerMain($wp_logger);
