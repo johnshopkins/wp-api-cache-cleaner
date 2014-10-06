@@ -36,56 +36,82 @@ class CacheCleaner extends BaseWorker
   }
 
   public function clean(\GearmanJob $job)
-{
+  {
     $workload = json_decode($job->workload());
 
-    print_r($workload->post);
+    if (isset($workload->post)) {
 
-    echo $this->getDate() . " Starting API cache clearing for post #{$workload->post->ID}.\n";
+      echo $this->getDate() . " Starting API cache clearing for post #{$workload->post->ID}.\n";
 
-    $result = $this->clearCache($workload->post);
-    
-    if ($result) {
-      echo $this->getDate() . " API cache cleared for post #{$workload->post->ID}.\n";
-    } else {
-      echo $this->getDate() . " API cache did not need to be cleared for post #{$workload->post->ID} (revision).\n";
+      $result = $this->clearCache($workload);
+      
+      if ($result) {
+        echo $this->getDate() . " API cache cleared for post #{$workload->post->ID}.\n";
+      } else {
+        echo $this->getDate() . " API cache did not need to be cleared for post #{$workload->post->ID} (revision).\n";
+      }
     }
 
-    echo "\n\n\n";
+    if (isset($workload->endpoint)) {
+
+      echo $this->getDate() . " Starting API cache clearing for endpoint /{$workload->endpoint}.\n";
+
+      $result = $this->clearCache($workload);
+      
+      if ($result) {
+        echo $this->getDate() . " API cache cleared for endpoint /{$workload->endpoint}.\n";
+      }
+
+    }
+
   }
 
-  public function clearCache($post)
+  public function clearCache($workload)
   {
-    echo $this->getDate() . " Checking Revision status for #{$post->ID}.\n";
-
-    if ($this->isRevision($post)) {
-      echo $this->getDate() . " Post is a revision, skipping #{$post->ID}.\n";
+    // stop if the post is a revision
+    if (isset($workload->post) && $this->isRevision($workload->post)) {
+      echo $this->getDate() . " Post is a revision, skipping #{$workload->post->ID}.\n";
       return false;
-    } else {
-      echo $this->getDate() . " POst is not a revision, continue #{$post->ID}.\n";
     }
 
+    $url = $this->getBase() . "/assets/plugins/wp-api-cache-cleaner/src/wget_cleaner.php";
+
+    $results = $this->httpEngine->get($url, $this->getParams($workload), $this->getHeaders())->getBody();
+    $results = json_decode($results);
+
+    foreach ($results as $result) {
+      echo $this->getDate() . " {$result}\n";
+    }
+
+    return true;
+  }
+
+  protected function getParams($workload)
+  {
+    $params = array();
+
+    if (isset($workload->post)) {
+
+      $params["endpoint"] = $workload->post->post_type;
+      $params["id"] = $workload->post->ID;
+
+    } else if (isset($workload->endpoint)) {
+
+      $params["endpoint"] = $workload->endpoint;
+
+    }
+
+    return $params;
+  }
+
+  protected function getHeaders()
+  {
     $secrets = Secret::get("jhu", "production", "plugins", "wp-api-cache-cleaner");
 
     $key = $secrets->key;
     $pw = $secrets->password;
 
-    $get = $this->getBase() . "/assets/plugins/wp-api-cache-cleaner/src/wget_cleaner.php";
-    
-    $endpoint = $post->post_type == "acf" ? "relationships" : $post->post_type;
-    
-    $params = array(
-      "endpoint" => $endpoint,
-      "id" => $post->post_type == "acf" ? null : $post->ID
-    );
-    
-    $headers = array($key => $pw);
-
-    $result = $this->httpEngine->get($get, $params, $headers)->getBody();
-
-    print_r(json_decode($result));
-
-    return true;
+    return array($key => $pw);
   }
 
   protected function getBase()

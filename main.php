@@ -58,16 +58,45 @@ class CacheCleanerMain
     add_action("add_attachment", array($this, "clear_cache"));
     add_action("edit_attachment", array($this, "clear_cache"));
 
+    // menu
+    add_action("wp_update_nav_menu", function () {
+      $this->clear_endpoint_cache("menus");
+    });
+
   }
 
+  /**
+   * Clear an object endpoint
+   * @param  integer $id
+   * @return Job queue ID
+   */
   public function clear_cache($id)
   {
     $post = get_post($id);
 
+    // don't clear nav menu items
+    if ($post->post_type == "nav_menu_item") return;
+
+    // if ACF, clear the relationship endpoint
+    if ($post->post_type == "acf") return $this->clear_endpoint_cache("relationships");
+
+    // otherwise, clear the post
     return $this->gearmanClient->doHighBackground("api_cache_clean", json_encode(array(
       "post" => $post
     )));
     
+  }
+
+  /**
+   * Clear an endpoint
+   * @param  string $endpoint
+   * @return Job queue ID
+   */
+  public function clear_endpoint_cache($endpoint)
+  {
+    return $this->gearmanClient->doHighBackground("api_cache_clean", json_encode(array(
+      "endpoint" => $endpoint
+    )));
   }
 
   public function warm_cache()
@@ -87,4 +116,4 @@ class CacheCleanerMain
 
 }
 
-new CacheCleanerMain($wp_logger);
+$jhu_cache_clearer = new CacheCleanerMain($wp_logger);

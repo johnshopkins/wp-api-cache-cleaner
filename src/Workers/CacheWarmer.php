@@ -43,8 +43,10 @@ class CacheWarmer extends BaseWorker
   protected $endpoints = array(
     "sections/maps",
     "sections/profiles",
-    "sections/timeline",
-    "sections/why-hopkins"
+    // "sections/timeline",
+    // "sections/why-hopkins",
+    // "map/hopkins-on-the-road",
+    "menus"
   );
 
   public function __construct($settings = array(), $deps = array())
