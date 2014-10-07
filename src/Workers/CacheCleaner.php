@@ -64,6 +64,8 @@ class CacheCleaner extends BaseWorker
 
     }
 
+    echo "------\n";
+
   }
 
   public function clearCache($workload)
