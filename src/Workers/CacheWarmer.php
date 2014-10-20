@@ -54,6 +54,9 @@ class CacheWarmer extends BaseWorker
     $this->api = isset($deps["api"]) ? $deps["api"] : new \WPUtilities\API();
     $this->wordpress_query = isset($deps["wordpress_query"]) ? $deps["wordpress_query"] : new \WPUtilities\WPQueryWrapper();
     $this->cache = $settings["cache"];
+    $this->logger = $settings["logger"];
+
+    $this->cachePrefix = isset($deps["cachePrefix"]) ? $deps["cachePrefix"] : new \WordPressAPI\Utilities\CachePrefix($this->cache);
 
     parent::__construct($settings, $deps);
   }
@@ -77,26 +80,75 @@ class CacheWarmer extends BaseWorker
     $workload = json_decode($job->workload());
     $types = $workload->types;
 
-    echo $this->getDate() . " Starting warming cache...\n";
-    
-    echo $this->getDate() . " Clearing cache...\n";
-    $this->cache->clear();
-    echo $this->getDate() . " Cache cleared.\n";
+    $oldStorePrefix = $this->cachePrefix->getStorePrefix();
 
+    // if the memcached server is disabled for more than 10 seconds
+    if (!$oldStorePrefix) {
+      $this->logger->addCritical("Memcached server is unable to store items in " . __FILE__ . " on line " . __LINE__);
+      return false;
+    }
+
+    // increment cache prefix
+    $this->cachePrefix->incremenetStorePrefix();
+
+    // warm cache
+    $newStorePrefix = $this->cachePrefix->getStorePrefix();
+    echo $this->getDate() . " Warming cache to new prefix ({$newStorePrefix})...\n";
+    echo "-\n";
+
+    // content types
     foreach ($this->contentTypes as $type) {
 
       if (!in_array($type, $types)) continue;
 
       $status = $type == "attachment" ? "inherit" : "publish";
       $this->warmObjects($type, $status);
+
+      echo "-\n";
     }
 
+    // endpoints
     foreach ($this->endpoints as $endpoint) {
       $this->api->get("/{$endpoint}");
       echo $this->getDate() . " Cached warmed for {$endpoint}.\n";
     }
 
+    echo "-\n";
+
     echo $this->getDate() . " Finished warming cache.\n";
+
+
+    // sync the fetch prefix with the store prefix
+    $this->cachePrefix->syncFetchPrefix();
+
+    // clean up old cache entries
+    echo $this->getDate() . " Removing items from cache with old prefix ({$oldStorePrefix})...\n";
+    $this->cleanupOldCache($oldStorePrefix);
+
+    echo $this->getDate() . " Old items cleaned up.\n";
+
+    echo "------\n";
+
+    return true;
+  }
+
+  protected function cleanupOldCache($prefix)
+  {
+    $cacheKeys = $this->cache->getKeys();
+
+    if (!$cacheKeys) return;
+
+    foreach ($cacheKeys as $rawKey) {
+
+      parse_str($rawKey, $parsedKey);
+
+      if (isset($parsedKey["prefix"]) && $parsedKey["prefix"] == $prefix) {
+        // echo $this->getDate() . " Deleting key with {$prefix} prefix.\n";
+        $this->cache->delete($rawKey, false);
+      }
+
+    }
+
   }
 
   protected function warmObjects($type, $status, $paged = 1)
@@ -112,13 +164,17 @@ class CacheWarmer extends BaseWorker
 
     foreach ($ids as $id) {
 
-      $this->api->get("/{$id}");
-      $this->api->get("/{$id}", array("returnEmbedded" => false));
+      $params = array("warming" => true);
+      $this->api->get($id, $params);
+
+      $params["returnEmbedded"] = false;
+      $this->api->get($id, $params);
+
       echo $this->getDate() . " Cached warmed for {$type}/{$id}.\n";
 
     }
 
-    var_dump($result->max_num_pages . " - " . $paged);
+    echo $this->getDate() . " Page {$paged} of {$result->max_num_pages} for {$type} complete.\n";
 
     if ($result->max_num_pages > $paged) {
       $this->warmObjects($type, $status, $paged + 1);

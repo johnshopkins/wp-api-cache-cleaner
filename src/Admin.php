@@ -34,7 +34,7 @@ class Admin
   protected function warmCacheForm()
   {
     $post_types = $this->wordpress->get_post_types(array("show_in_menu" => "content"), "objects");
-    $defaultOn = array("page", "attachment", "block", "button", "club", "division", "fact", "field_of_study", "location", "map", "news_bar", "person", "quote", "related_content", "slate_form" , "timeline_event");
+    $defaultOn = array("page", "attachment", "block", "button", "club", "collection", "division", "fact", "field_of_study", "location", "map", "news_bar", "person", "quote", "related_content", "search_response", "teaser", "timeline_event");
 
     $html = "<h3>Warm Cache</h3>";
     $html .= "<p>Select the content types to warm from the list below.</p>";
