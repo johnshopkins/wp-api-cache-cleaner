@@ -109,7 +109,8 @@ class CacheWarmer extends BaseWorker
 
     // endpoints
     foreach ($this->endpoints as $endpoint) {
-      $this->api->get("/{$endpoint}");
+      $params = array("warming" => true);
+      $this->api->get("/{$endpoint}", $params);
       echo $this->getDate() . " Cached warmed for {$endpoint}.\n";
     }
 
