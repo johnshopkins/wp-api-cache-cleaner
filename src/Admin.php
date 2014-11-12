@@ -20,8 +20,8 @@ class Admin
     $extra = $this->warmCacheForm();
 
     $this->menuPage = new \WPUtilities\Admin\Settings\SubMenuPage(
-      "options-general.php",
-      "API Cache Options",
+      "tools.php",
+      "API Cache",
       "API Cache",
       "activate_plugins",
       "api-cache",
