@@ -24,10 +24,10 @@ class CacheCleaner extends BaseWorker
   {
     $this->httpEngine = isset($deps["httpEngine"]) ? $deps["httpEngine"] : new \HttpExchange\Adapters\Resty(new \Resty\Resty());
     $this->post_util = isset($deps["post_util"]) ? $deps["post_util"] : new \WPUtilities\Post();
-    
+
     parent::__construct($settings, $deps);
   }
-    
+
 
   public function addFunctions()
   {
@@ -42,18 +42,22 @@ class CacheCleaner extends BaseWorker
     if (isset($workload->post)) {
 
       $result = $this->clearCache($workload);
-      if ($result) echo $this->getDate() . " API cache cleared for post #{$workload->post->ID}.\n";
+      if ($result) {
+        echo $this->getDate() . " API cache cleared for post #{$workload->post->ID}.\n";
+        echo "------\n";
+      }
 
     }
 
     if (isset($workload->endpoint)) {
 
       $result = $this->clearCache($workload);
-      if ($result) echo $this->getDate() . " API cache cleared for endpoint /{$workload->endpoint}.\n";
+      if ($result) {
+        echo $this->getDate() . " API cache cleared for endpoint /{$workload->endpoint}.\n";
+        echo "------\n";
+      }
 
     }
-
-    echo "------\n";
 
   }
 
