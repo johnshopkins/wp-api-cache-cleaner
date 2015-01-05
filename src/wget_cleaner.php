@@ -11,15 +11,9 @@ require $root . "/vendor/autoload.php";
 require $root . "/vendor/wordpress/wordpress/wp-blog-header.php";
 
 // validate request
-$headers = apache_request_headers();
-$validator = new \CacheCleaner\Utilities\Validator($headers);
+$validator = new \CacheCleaner\Utilities\Validator($_GET);
 
-if (!$validator->validate()) {
-  echo "validator failed.<br>";
-  die(1);
-} else {
-  echo "validator passed<br>.";
-}
+if (!$validator->validate()) die(1);
 
 $cleaner = new \CacheCleaner\Utilities\CacheCleaner($jhu_cacher);
 

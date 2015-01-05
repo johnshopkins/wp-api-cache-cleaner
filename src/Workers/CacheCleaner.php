@@ -68,7 +68,7 @@ class CacheCleaner extends BaseWorker
 
     $url = $this->getBase() . "/assets/plugins/wp-api-cache-cleaner/src/wget_cleaner.php";
 
-    $results = $this->httpEngine->get($url, $this->getParams($workload), $this->getHeaders())->getBody();
+    $results = $this->httpEngine->get($url, $this->getParams($workload))->getBody();
     $results = json_decode($results);
 
     foreach ($results as $result) {
@@ -93,19 +93,11 @@ class CacheCleaner extends BaseWorker
 
     }
 
-    return $params;
-  }
-
-  protected function getHeaders()
-  {
+    // set key
     $secrets = Secret::get("jhu", ENV, "plugins", "wp-api-cache-cleaner");
+    $params[$secrets->key] = $secrets->password;
 
-    $key = $secrets->key;
-    $pw = $secrets->password;
-
-    print_r(array($key => $pw));
-
-    return array($key => $pw);
+    return $params;
   }
 
   protected function getBase()
