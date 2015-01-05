@@ -98,10 +98,12 @@ class CacheCleaner extends BaseWorker
 
   protected function getHeaders()
   {
-    $secrets = Secret::get("jhu", "production", "plugins", "wp-api-cache-cleaner");
+    $secrets = Secret::get("jhu", ENV, "plugins", "wp-api-cache-cleaner");
 
     $key = $secrets->key;
     $pw = $secrets->password;
+
+    print_r(array($key => $pw));
 
     return array($key => $pw);
   }

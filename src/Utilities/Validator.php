@@ -11,7 +11,10 @@ class Validator
   }
   public function validate()
   {
-    $secrets = Secret::get("jhu", "production", "plugins", "wp-api-cache-cleaner");
+    $secrets = Secret::get("jhu", ENV, "plugins", "wp-api-cache-cleaner");
+
+    print_r($secrets);
+    print_r($this->headers);
 
     $key = $secrets->key;
     $pw = $secrets->password;

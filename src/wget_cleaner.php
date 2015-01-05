@@ -1,5 +1,8 @@
 <?php
 
+ini_set('display_errors',1);
+error_reporting(E_ALL);
+
 $root = dirname(dirname(dirname(dirname(dirname(__DIR__)))));
 
 // load wordpress for $jhu_cacher and ENV
@@ -11,7 +14,12 @@ require $root . "/vendor/wordpress/wordpress/wp-blog-header.php";
 $headers = apache_request_headers();
 $validator = new \CacheCleaner\Utilities\Validator($headers);
 
-if (!$validator->validate()) die(1);
+if (!$validator->validate()) {
+  echo "validator failed.<br>";
+  die(1);
+} else {
+  echo "validator passed<br>.";
+}
 
 $cleaner = new \CacheCleaner\Utilities\CacheCleaner($jhu_cacher);
 
