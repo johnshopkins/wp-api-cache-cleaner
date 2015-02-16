@@ -30,14 +30,14 @@ class CacheWarmer extends BaseWorker
     "timeline_event",   // attachment
 
     "map",              // attachment, location
-    "page",             // block, attachment
-    
+
     "person",           // attachment, field_of_study, club, division
     "quote",            // person
 
     "block",            // many things
+    "page",             // block, attachment
     "collection"
-    
+
   );
 
   protected $endpoints = array(
