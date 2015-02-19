@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: CacheCleaner
-Description: 
+Description:
 Author: johnshopkins
 Version: 0.1
 */
@@ -23,7 +23,7 @@ class CacheCleanerMain
     });
 
     $this->gearmanClient = isset($injection["gearmanClient"]) ? $injection["gearmanClient"] : new \GearmanClient();
-    
+
     $servers = Secret::get("jhu", ENV, "servers");
 
     if ($servers) {
@@ -80,11 +80,20 @@ class CacheCleanerMain
     // if ACF, clear the relationship endpoint
     if ($post->post_type == "acf") return $this->clear_endpoint_cache("relationships");
 
+    // if field of study, clear the program-explorer endpoint and the psot
+    if ($post->post_type == "field_of_study") {
+      return $this->gearmanClient->doHighBackground("api_cache_clean", json_encode(array(
+        "post" => $post,
+        "endpoint" => "program-explorer"
+      )));
+
+    }
+
     // otherwise, clear the post
     return $this->gearmanClient->doHighBackground("api_cache_clean", json_encode(array(
       "post" => $post
     )));
-    
+
   }
 
   /**
@@ -105,7 +114,7 @@ class CacheCleanerMain
     if (isset($_POST["action"])) unset($_POST["action"]);
     if (isset($_POST["submit"])) unset($_POST["submit"]);
     $types = array_keys($_POST);
-    
+
     $this->gearmanClient->doNormal("api_cache_warm", json_encode(array(
       "types" => $types
     )));
