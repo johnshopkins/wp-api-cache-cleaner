@@ -43,6 +43,7 @@ class CacheWarmer extends BaseWorker
   protected $endpoints = array(
     "sections/maps",
     "sections/divisions",
+    "sections/research",
     "menus",
     "rave/alert",
     "hub/bigstory",
