@@ -5,18 +5,18 @@ use Secrets\Secret;
 
 class Validator
 {
-  public function __construct($headers)
+  public function __construct($params)
   {
-    $this->headers = $headers;
+    $this->params = $params;
   }
   public function validate()
   {
-    $secrets = Secret::get("jhu", "production", "plugins", "wp-api-cache-cleaner");
+    $secrets = Secret::get("jhu", ENV, "plugins", "wp-api-cache-cleaner");
 
     $key = $secrets->key;
     $pw = $secrets->password;
 
-    if (!isset($this->headers[$key]) || (isset($this->headers[$key]) && $this->headers[$key] !== $pw)) {
+    if (!isset($this->params[$key]) || (isset($this->params[$key]) && $this->params[$key] !== $pw)) {
       return false;
     }
 

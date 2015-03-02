@@ -24,10 +24,10 @@ class CacheCleaner extends BaseWorker
   {
     $this->httpEngine = isset($deps["httpEngine"]) ? $deps["httpEngine"] : new \HttpExchange\Adapters\Resty(new \Resty\Resty());
     $this->post_util = isset($deps["post_util"]) ? $deps["post_util"] : new \WPUtilities\Post();
-    
+
     parent::__construct($settings, $deps);
   }
-    
+
 
   public function addFunctions()
   {
@@ -42,18 +42,22 @@ class CacheCleaner extends BaseWorker
     if (isset($workload->post)) {
 
       $result = $this->clearCache($workload);
-      if ($result) echo $this->getDate() . " API cache cleared for post #{$workload->post->ID}.\n";
+      if ($result) {
+        echo $this->getDate() . " API cache cleared for post #{$workload->post->ID}.\n";
+        echo "------\n";
+      }
 
     }
 
     if (isset($workload->endpoint)) {
 
       $result = $this->clearCache($workload);
-      if ($result) echo $this->getDate() . " API cache cleared for endpoint /{$workload->endpoint}.\n";
+      if ($result) {
+        echo $this->getDate() . " API cache cleared for endpoint /{$workload->endpoint}.\n";
+        echo "------\n";
+      }
 
     }
-
-    echo "------\n";
 
   }
 
@@ -64,7 +68,7 @@ class CacheCleaner extends BaseWorker
 
     $url = $this->getBase() . "/assets/plugins/wp-api-cache-cleaner/src/wget_cleaner.php";
 
-    $results = $this->httpEngine->get($url, $this->getParams($workload), $this->getHeaders())->getBody();
+    $results = $this->httpEngine->get($url, $this->getParams($workload))->getBody();
     $results = json_decode($results);
 
     foreach ($results as $result) {
@@ -89,17 +93,11 @@ class CacheCleaner extends BaseWorker
 
     }
 
+    // set key
+    $secrets = Secret::get("jhu", ENV, "plugins", "wp-api-cache-cleaner");
+    $params[$secrets->key] = $secrets->password;
+
     return $params;
-  }
-
-  protected function getHeaders()
-  {
-    $secrets = Secret::get("jhu", "production", "plugins", "wp-api-cache-cleaner");
-
-    $key = $secrets->key;
-    $pw = $secrets->password;
-
-    return array($key => $pw);
   }
 
   protected function getBase()

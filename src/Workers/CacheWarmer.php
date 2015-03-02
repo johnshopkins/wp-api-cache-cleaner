@@ -30,23 +30,26 @@ class CacheWarmer extends BaseWorker
     "timeline_event",   // attachment
 
     "map",              // attachment, location
-    "page",             // block, attachment
-    
+
     "person",           // attachment, field_of_study, club, division
     "quote",            // person
 
     "block",            // many things
+    "page",             // block, attachment
     "collection"
-    
+
   );
 
   protected $endpoints = array(
     "sections/maps",
-    "sections/profiles",
-    // "sections/timeline",
-    // "sections/why-hopkins",
-    // "map/hopkins-on-the-road",
-    "menus"
+    "sections/divisions",
+    "sections/research",
+    "menus",
+    "rave/alert",
+    "hub/bigstory",
+    "hub/articles/tray",
+    "hub/events/tray",
+    "program-explorer"
   );
 
   public function __construct($settings = array(), $deps = array())
