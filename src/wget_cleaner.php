@@ -17,23 +17,22 @@ if (!$validator->validate()) die(1);
 
 $cleaner = new \CacheCleaner\Utilities\CacheCleaner($jhu_cacher);
 
-if (!empty($_GET["id"])) {
-$endpoints = $_GET["endpoints"];
+$id = isset($_GET["id"]) ? $_GET["id"] : null;
+$endpoints = isset($_GET["endpoint"]) ? $_GET["endpoint"] : null;
+
+
+if ($id) {
   $clearedIds = $cleaner->clearObjectCache($_GET["id"]);
   $clearedEndpoints = $cleaner->clearFoundEndpoints();
-  $logs = $cleaner->logs;
 }
 
-if (!empty($endpoints)) {
-
+if ($endpoints) {
+  $endpoints = explode(",", $endpoints);
   foreach ($endpoints as $endpoint) {
-
     $cleaner->clearEndpointCache($endpoint);
-    $logs = array_merge($logs, $cleaner->logs)
-
   }
 }
 
 // echo out the logs
-echo json_encode($logs);
+echo json_encode($cleaner->logs);
 die();
