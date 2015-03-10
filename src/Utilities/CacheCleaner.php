@@ -87,6 +87,9 @@ class CacheCleaner
       }
     }
 
+    $this->logs[] = "API cache cleared for post: #{$id}";
+    $this->logs[] = "-----";
+
     return $this->logs;
 
   }
@@ -108,6 +111,9 @@ class CacheCleaner
 
       }
     }
+
+    $this->logs[] = "API cache cleared for endpoint: {$endpoint}";
+    $this->logs[] = "-----";
 
     return $this->logs;
   }
