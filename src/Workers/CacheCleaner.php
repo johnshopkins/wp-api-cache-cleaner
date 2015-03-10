@@ -77,6 +77,8 @@ class CacheCleaner extends BaseWorker
       $params["endpoint"][] = $workload->endpoint;
     }
 
+    $params["endpoint"] = implode(",", $params["endpoint"]);
+
     // set key
     $secrets = Secret::get("jhu", ENV, "plugins", "wp-api-cache-cleaner");
     $params[$secrets->key] = $secrets->password;
