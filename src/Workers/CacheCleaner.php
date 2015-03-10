@@ -64,17 +64,17 @@ class CacheCleaner extends BaseWorker
 
   protected function getParams($workload)
   {
-    $params = array();
+    $params = array(
+      "endpoint" => array()
+    );
 
     if (isset($workload->post)) {
-
-      $params["endpoint"] = $workload->post->post_type;
+      $params["endpoint"][] = $workload->post->post_type;
       $params["id"] = $workload->post->ID;
+    }
 
-    } else if (isset($workload->endpoint)) {
-
-      $params["endpoint"] = $workload->endpoint;
-
+    if (isset($workload->endpoint)) {
+      $params["endpoint"][] = $workload->endpoint;
     }
 
     // set key

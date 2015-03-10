@@ -18,14 +18,20 @@ if (!$validator->validate()) die(1);
 $cleaner = new \CacheCleaner\Utilities\CacheCleaner($jhu_cacher);
 
 if (!empty($_GET["id"])) {
+$endpoints = $_GET["endpoints"];
   $clearedIds = $cleaner->clearObjectCache($_GET["id"]);
   $clearedEndpoints = $cleaner->clearFoundEndpoints();
   $logs = $cleaner->logs;
 }
 
-if (!empty($_GET["endpoint"])) {
-  $cleaner->clearEndpointCache($_GET["endpoint"]);
-  $logs = $cleaner->logs;
+if (!empty($endpoints)) {
+
+  foreach ($endpoints as $endpoint) {
+
+    $cleaner->clearEndpointCache($endpoint);
+    $logs = array_merge($logs, $cleaner->logs)
+
+  }
 }
 
 // echo out the logs
