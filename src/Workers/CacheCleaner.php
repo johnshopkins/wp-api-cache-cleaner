@@ -39,24 +39,8 @@ class CacheCleaner extends BaseWorker
   {
     $workload = json_decode($job->workload());
 
-    if (isset($workload->post)) {
-
-      $result = $this->clearCache($workload);
-      if ($result) {
-        echo $this->getDate() . " API cache cleared for post #{$workload->post->ID}.\n";
-        echo "------\n";
-      }
-
-    }
-
-    if (isset($workload->endpoint)) {
-
-      $result = $this->clearCache($workload);
-      if ($result) {
-        echo $this->getDate() . " API cache cleared for endpoint /{$workload->endpoint}.\n";
-        echo "------\n";
-      }
-
+    if (isset($workload->post) || isset($workload->endpoint)) {
+      $this->clearCache($workload);
     }
 
   }
