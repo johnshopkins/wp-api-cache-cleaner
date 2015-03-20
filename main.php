@@ -114,9 +114,9 @@ class CacheCleanerMain
     if (isset($_POST["action"])) unset($_POST["action"]);
     if (isset($_POST["submit"])) unset($_POST["submit"]);
 
-    $this->gearmanClient->doNormal("api_cache_warm", json_encode(array()));
+    $this->gearmanClient->doBackground("api_cache_warm", json_encode(array()));
 
-    $redirect = admin_url("options-general.php?page=api-cache");
+    $redirect = admin_url("tools.php?page=api-cache");
     header("Location: {$redirect}");
   }
 
