@@ -181,6 +181,10 @@ class CacheWarmer extends BaseWorker
       $params = array("warming" => true);
       $this->api->get($id, $params);
 
+      if ($type == "page") {
+        $this->api->get("breadcrumbs/{$id}", $params);
+      }
+
       $params["returnEmbedded"] = false;
       $this->api->get($id, $params);
 
