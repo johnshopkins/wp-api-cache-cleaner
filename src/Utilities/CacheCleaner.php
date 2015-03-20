@@ -80,7 +80,11 @@ class CacheCleaner
 
     }
 
-    if (!$parents) return;
+    if (!$parents) {
+      $this->logs[] = "API cache cleared for post: #{$id}";
+      $this->logs[] = "-----";
+      return;
+    }
 
     // clear parent cache
 
