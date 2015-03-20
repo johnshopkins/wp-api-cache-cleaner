@@ -29,6 +29,9 @@ class CacheCleaner
     $this->cache = $cache;
     $this->cacheKeys = $this->cache->getKeys();
     $this->api = isset($deps["api"]) ? $deps["api"] : new \WPUtilities\API();
+    $this->cachePrefix = isset($deps["cachePrefix"]) ? $deps["cachePrefix"] : new \WordPressAPI\Utilities\CachePrefix($this->cache);
+
+    $this->prefix = $this->cachePrefix->getStorePrefix();
   }
 
   public function clearObjectCache($id)
@@ -53,10 +56,16 @@ class CacheCleaner
 
       if ($foundObject && $foundParents) break;
 
+      // don't examine keys not related to the API
       if (!preg_match("/source=wpapi/", $rawKey)) continue;
+
+      // don'e examine keys not using the current prefix
+      if (!preg_match("/prefix={$this->prefix}/", $rawKey)) continue;
+
       parse_str($rawKey, $parsedKey);
 
       if (preg_match($pattern, $rawKey)) {
+
         // this object's cache
         $this->clearCache($parsedKey);
         $fountObject = true;
@@ -102,7 +111,12 @@ class CacheCleaner
 
     foreach ($this->cacheKeys as $rawKey) {
 
+      // don't examine keys not related to the API
       if (!preg_match("/source=wpapi/", $rawKey)) continue;
+
+      // don'e examine keys not using the current prefix
+      if (!preg_match("/prefix={$this->prefix}/", $rawKey)) continue;
+
       parse_str($rawKey, $parsedKey);
 
       if (preg_match($pattern, $rawKey)) {
