@@ -74,7 +74,11 @@ class CacheCleaner extends BaseWorker
     }
 
     if ($workload->post->post_type == "page") {
-      // add breadcrumb endpoints
+      
+      // this page
+      $params["endpoint"][] = "breadcrumbs/{$workload->post->ID}";
+
+      // child pages
       $children = $this->post_util->getChildren($workload->post->ID);
       foreach ($children as $child) {
         $params["endpoint"][] = "breadcrumbs/{$child}";
