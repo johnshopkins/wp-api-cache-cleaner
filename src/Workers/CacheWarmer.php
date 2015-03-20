@@ -81,7 +81,6 @@ class CacheWarmer extends BaseWorker
   public function warmCache(\GearmanJob $job)
   {
     $workload = json_decode($job->workload());
-    $types = $workload->types;
 
     $oldStorePrefix = $this->cachePrefix->getStorePrefix();
 
@@ -101,8 +100,6 @@ class CacheWarmer extends BaseWorker
 
     // content types
     foreach ($this->contentTypes as $type) {
-
-      if (!in_array($type, $types)) continue;
 
       $status = $type == "attachment" ? "inherit" : "publish";
       $this->warmObjects($type, $status);
