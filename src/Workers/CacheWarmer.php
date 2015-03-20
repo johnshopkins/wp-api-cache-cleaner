@@ -11,7 +11,11 @@ class CacheWarmer extends BaseWorker
   protected $api;
 
   /**
-   * In order of least embedded objects to most
+   * A list of content types to clear in
+   * the cache in the exact order they should
+   * clear. Objects that have other objects
+   * embedded in them should clear __after__
+   * their embedded objects for maximum speed.
    * @var array
    */
   protected $contentTypes = array(
@@ -19,22 +23,31 @@ class CacheWarmer extends BaseWorker
     // no embeds
     "attachment",
     "club",
-    "division",
     "related_content",
+    "button",
 
-    // embeds
+
+    "division",         // attachment
+    "teaser",           // attachment
     "fact",             // attachment
-    "field_of_study",   // division
     "location",         // attachment
+    "hero_video",       // attachment
+    // "milestone",        // attachment -- not being used for anything right now`
+
+    "field_of_study",   // division
     "instagram_media",  // location
-    "timeline_event",   // attachment
+    "map",              // location
 
-    "map",              // attachment, location
 
-    "person",           // attachment, field_of_study, club, division
+
+    /**
+     * Person and quote objects both contain each
+     * other, so their order doesn't really matter.
+     */
+    "person",           // attachment, field_of_study, club, division, quote
     "quote",            // person
 
-    "block",            // many things
+    "block",            // so many things
     "page",             // block, attachment
     "collection"
 
