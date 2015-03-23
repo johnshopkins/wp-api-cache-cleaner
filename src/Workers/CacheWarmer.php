@@ -181,8 +181,10 @@ class CacheWarmer extends BaseWorker
       $params = array("warming" => true);
       $this->api->get($id, $params);
 
+      // add breadcrumbs and menus endpoints
       if ($type == "page") {
         $this->api->get("breadcrumbs/{$id}", $params);
+        $this->api->get("menus", $params);
       }
 
       $params["returnEmbedded"] = false;
