@@ -59,7 +59,7 @@ class CacheWarmer extends BaseWorker
     "sections/research",
     "menus",
     "rave/alert",
-    "hub/bigstory",
+    "bigstory",
     "hub/articles/tray",
     "hub/events/tray",
     "program-explorer"
