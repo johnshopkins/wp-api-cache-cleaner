@@ -55,7 +55,7 @@ class CacheCleanerMain
     }
 
     // attachments
-    add_action("add_attachment", array($this, "clear_cache"));
+    // add_action("add_attachment", array($this, "clear_cache")); // this is taken care of in wp-uploads-sync
     add_action("edit_attachment", array($this, "clear_cache"));
 
     // menu
