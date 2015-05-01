@@ -164,7 +164,9 @@ class CacheCleaner
 
     $this->logs[] = "Clearing {$this->api->apiBase}{$uri}?{$query_string}";
 
-    $this->api->get($uri, $query_string);
+    $response = $this->api->get($uri, $query_string);
+
+    $this->logs[] = json_encode($response);
   }
 
 }
