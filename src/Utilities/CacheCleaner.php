@@ -28,7 +28,7 @@ class CacheCleaner
   {
     $this->cache = $cache;
     $this->cacheKeys = $this->cache->getKeys();
-    $this->api = isset($deps["api"]) ? $deps["api"] : new \WPUtilities\API();
+    $this->api = new \WPUtilities\API(array(), true);
     $this->cachePrefix = isset($deps["cachePrefix"]) ? $deps["cachePrefix"] : new \WordPressAPI\Utilities\CachePrefix($this->cache);
 
     $this->prefix = $this->cachePrefix->getStorePrefix();
@@ -162,7 +162,7 @@ class CacheCleaner
 
     $query_string = http_build_query($params);
 
-    $this->logs[] = "Clearing {$uri}?{$query_string}";
+    $this->logs[] = "Clearing {$this->api->apiBase}{$uri}?{$query_string}";
 
     $this->api->get($uri, $query_string);
   }
