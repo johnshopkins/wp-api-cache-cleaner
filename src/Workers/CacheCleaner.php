@@ -74,7 +74,7 @@ class CacheCleaner extends BaseWorker
     }
 
     if ($workload->post->post_type == "page") {
-      
+
       // this page
       $params["endpoint"][] = "breadcrumbs/{$workload->post->ID}";
 
@@ -106,7 +106,7 @@ class CacheCleaner extends BaseWorker
     } elseif (ENV == 'staging') {
       return "https://staging.jhu.edu";
     } else {
-      return "https://beta.jhu.edu";
+      return "https://origin-beta1.jhu.edu";
     }
   }
 
