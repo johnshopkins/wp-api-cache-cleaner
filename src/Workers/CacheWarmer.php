@@ -67,7 +67,7 @@ class CacheWarmer extends BaseWorker
 
   public function __construct($settings = array(), $deps = array())
   {
-    $this->api = isset($deps["api"]) ? $deps["api"] : new \WPUtilities\API();
+    $this->api = isset($deps["api"]) ? $deps["api"] : new \WPUtilities\API(null, true);
     $this->wordpress_query = isset($deps["wordpress_query"]) ? $deps["wordpress_query"] : new \WPUtilities\WPQueryWrapper();
     $this->cache = $settings["cache"];
     $this->logger = $settings["logger"];
