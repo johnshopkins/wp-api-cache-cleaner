@@ -106,7 +106,7 @@ class CacheCleaner extends BaseWorker
     } elseif (ENV == 'staging') {
       return "https://staging.jhu.edu";
     } else {
-      return "https://origin-beta4.jhu.edu";
+      return "https://origin-beta3.jhu.edu";
     }
   }
 
