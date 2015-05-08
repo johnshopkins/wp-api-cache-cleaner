@@ -166,7 +166,7 @@ class CacheCleaner
 
     $response = $this->api->get($uri, $query_string);
 
-    $this->logs[] = json_encode($response);
+    // $this->logs[] = json_encode($response);
   }
 
 }
