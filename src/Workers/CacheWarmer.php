@@ -20,36 +20,36 @@ class CacheWarmer extends BaseWorker
    */
   protected $contentTypes = array(
 
-    // no embeds
-    "attachment",
-    "club",
-    "related_content",
-    "button",
-
-
-    "division",         // attachment
-    "teaser",           // attachment
-    "fact",             // attachment
-    "location",         // attachment
-    "hero_video",       // attachment
-    // "milestone",        // attachment -- not being used for anything right now`
-
-    "field_of_study",   // division
-    "instagram_media",  // location
-    "map",              // location
-
-
-
-    /**
-     * Person and quote objects both contain each
-     * other, so their order doesn't really matter.
-     */
-    "person",           // attachment, field_of_study, club, division, quote
-    "quote",            // person
-
-    "block",            // so many things
-    "page",             // block, attachment
-    "collection"
+    // // no embeds
+    // "attachment",
+    // "club",
+    // "related_content",
+    // "button",
+    //
+    //
+    // "division",         // attachment
+    // "teaser",           // attachment
+    // "fact",             // attachment
+    // "location",         // attachment
+    // "hero_video",       // attachment
+    // // "milestone",        // attachment -- not being used for anything right now`
+    //
+    // "field_of_study",   // division
+    // "instagram_media",  // location
+    // "map",              // location
+    //
+    //
+    //
+    // /**
+    //  * Person and quote objects both contain each
+    //  * other, so their order doesn't really matter.
+    //  */
+    // "person",           // attachment, field_of_study, club, division, quote
+    // "quote",            // person
+    //
+    // "block",            // so many things
+    // "page",             // block, attachment
+    // "collection"
 
   );
 
