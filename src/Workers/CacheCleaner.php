@@ -1,7 +1,6 @@
 <?php
 
 namespace CacheCleaner\Workers;
-use Secrets\Secret;
 
 /**
  * Gearman Worker
@@ -9,94 +8,37 @@ use Secrets\Secret;
 class CacheCleaner extends BaseWorker
 {
   /**
-  * Post Utility
-  * @var object
-  */
-  protected $post_util;
-
-  /**
    * HTTP Engine
    * @var [type]
    */
-  protected $httpEngine;
+  protected $http;
 
-  public function __construct($settings = array(), $deps = array())
+  public function __construct($settings = array())
   {
-    $this->httpEngine = isset($deps["httpEngine"]) ? $deps["httpEngine"] : new \HttpExchange\Adapters\Resty(new \Resty\Resty());
-    $this->post_util = isset($deps["post_util"]) ? $deps["post_util"] : new \WPUtilities\Post();
+    $this->worker = $settings["worker"];
+    $this->logger = $settings["logger"];
+    $this->http = new \HttpExchange\Adapters\Resty(new \Resty\Resty());
 
-    parent::__construct($settings, $deps);
+    $this->addFunctions();
   }
-
 
   public function addFunctions()
   {
     parent::addFunctions();
-    $this->worker->addFunction("api_cache_clean", array($this, "clean"));
+    $this->worker->addFunction("api_clear_endpoint", array($this, "clearEndpoint"));
   }
 
-  public function clean(\GearmanJob $job)
+  public function clearEndpoint(\GearmanJob $job)
   {
     $workload = json_decode($job->workload());
+    $endpoint = $wordload->endpoint;
 
-    if (isset($workload->post) || isset($workload->endpoint)) {
-      $this->clearCache($workload);
-    }
+    echo $this->getDate() . " Clearing endpoint cache for {$endpoint}\n";
 
-  }
+    $url = $this->getBase() . "/" + $endpoint;
+    $result = $this->http->get($url);
 
-  public function clearCache($workload)
-  {
-    // stop if the post is a revision
-    if (isset($workload->post) && $this->isRevision($workload->post)) return false;
-
-    $url = $this->getBase() . "/assets/plugins/wp-api-cache-cleaner/src/wget_cleaner.php";
-
-    $results = $this->httpEngine->get($url, $this->getParams($workload))->getBody();
-    $results = json_decode($results);
-
-    foreach ($results as $result) {
-      echo $this->getDate() . " {$result}\n";
-    }
-
-    return true;
-  }
-
-  protected function getParams($workload)
-  {
-    $params = array(
-      "endpoint" => array()
-    );
-
-    if (isset($workload->post)) {
-      $params["endpoint"][] = $workload->post->post_type;
-      $params["id"] = $workload->post->ID;
-    }
-
-    if ($workload->post->post_type == "page") {
-
-      // this page
-      $params["endpoint"][] = "breadcrumbs/{$workload->post->ID}";
-
-      // child pages
-      $children = $this->post_util->getChildren($workload->post->ID);
-      foreach ($children as $child) {
-        $params["endpoint"][] = "breadcrumbs/{$child}";
-      }
-
-    }
-
-    if (isset($workload->endpoint)) {
-      $params["endpoint"][] = $workload->endpoint;
-    }
-
-    $params["endpoint"] = implode(",", $params["endpoint"]);
-
-    // set key
-    $secrets = Secret::get("jhu", ENV, "plugins", "wp-api-cache-cleaner");
-    $params[$secrets->key] = $secrets->password;
-
-    return $params;
+    print_r($results); die();
   }
 
   protected function getBase()
@@ -106,18 +48,13 @@ class CacheCleaner extends BaseWorker
     } elseif (ENV == 'staging') {
       return "https://staging.jhu.edu";
     } else {
-      return "https://origin-beta3.jhu.edu";
+      return "https://www.jhu.edu";
     }
   }
 
-  /**
-   * Find out if a post is a revision
-   * @param  object $post Post object
-   * @return boolan
-   */
-  protected function isRevision($post)
+  protected function getDate()
   {
-    return $this->post_util->isRevision($post);
+    return date("Y-m-d H:i:s");
   }
 
 }

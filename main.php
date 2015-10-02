@@ -16,8 +16,7 @@ class CacheCleanerMain
   public function __construct($logger)
   {
     $this->logger = $logger;
-
-    $this->gearmanClient = isset($injection["gearmanClient"]) ? $injection["gearmanClient"] : new \GearmanClient();
+    $this->gearmanClient = new \GearmanClient();
 
     $servers = Secret::get("jhu", ENV, "servers");
 
@@ -66,25 +65,15 @@ class CacheCleanerMain
   {
     $post = get_post($id);
 
-    // don't clear nav menu items
-    if ($post->post_type == "nav_menu_item") return;
-
     // if ACF, clear the relationship endpoint
-    if ($post->post_type == "acf") return $this->clear_endpoint_cache("relationships");
-
-    // if field of study, clear the program-explorer endpoint and the psot
-    if ($post->post_type == "field_of_study") {
-      return $this->gearmanClient->doHighBackground("api_cache_clean", json_encode(array(
-        "post" => $post,
-        "endpoint" => "program-explorer"
-      )));
-
+    if ($post->post_type == "acf") {
+      $this->clear_endpoint_cache("relationships");
     }
 
-    // otherwise, clear the post
-    return $this->gearmanClient->doHighBackground("api_cache_clean", json_encode(array(
-      "post" => $post
-    )));
+    // if field of study, clear the program-explorer endpoint
+    if ($post->post_type == "field_of_study") {
+      $this->clear_endpoint_cache("program-explorer");
+    }
 
   }
 
@@ -95,7 +84,7 @@ class CacheCleanerMain
    */
   public function clear_endpoint_cache($endpoint)
   {
-    return $this->gearmanClient->doHighBackground("api_cache_clean", json_encode(array(
+    return $this->gearmanClient->doHighBackground("api_clear_endpoint", json_encode(array(
       "endpoint" => $endpoint
     )));
   }
