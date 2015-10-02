@@ -36,9 +36,6 @@ class CacheCleanerMain
 
   protected function addHooks()
   {
-    // warm button in admin
-    add_action("admin_post_wp_api_cache_cleaner_warm", array($this, "warm_cache"));
-
     // posts
     add_action("save_post", array($this, "clear_cache"));
 
@@ -101,18 +98,6 @@ class CacheCleanerMain
     return $this->gearmanClient->doHighBackground("api_cache_clean", json_encode(array(
       "endpoint" => $endpoint
     )));
-  }
-
-  public function warm_cache()
-  {
-    // get checked types
-    if (isset($_POST["action"])) unset($_POST["action"]);
-    if (isset($_POST["submit"])) unset($_POST["submit"]);
-
-    $this->gearmanClient->doBackground("api_cache_warm", json_encode(array()));
-
-    $redirect = admin_url("tools.php?page=api-cache");
-    header("Location: {$redirect}");
   }
 
 }
