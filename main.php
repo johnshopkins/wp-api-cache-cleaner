@@ -17,11 +17,6 @@ class CacheCleanerMain
   {
     $this->logger = $logger;
 
-    // Create admin pages
-    add_action("wp_loaded", function () {
-      new \CacheCleaner\Admin();
-    });
-
     $this->gearmanClient = isset($injection["gearmanClient"]) ? $injection["gearmanClient"] : new \GearmanClient();
 
     $servers = Secret::get("jhu", ENV, "servers");
