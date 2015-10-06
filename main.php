@@ -1,8 +1,8 @@
 <?php
 /*
 Plugin Name: CacheCleaner
-Description:
-Author: johnshopkins
+Description: Takes care of clearing the permanantly cached items when necessary.
+Author: Jen Wachter
 Version: 0.1
 */
 
@@ -38,16 +38,11 @@ class CacheCleanerMain
     // posts
     add_action("save_post", array($this, "clear_cache"));
 
-    // if trash is turned off, add a hook to take care of deleted
-    // posts. Otherwise, deleted posts are treated with save_post
-    // as a status change
+    // if trash is turned off, add a hook to take care of deleted posts.
+    // Otherwise, deleted posts are treated with save_post as a status change
     if (defined("EMPTY_TRASH_DAYS") && EMPTY_TRASH_DAYS == 0) {
         add_action("deleted_post", array($this, "clear_cache"));
     }
-
-    // attachments
-    // add_action("add_attachment", array($this, "clear_cache")); // this is taken care of in wp-uploads-sync
-    add_action("edit_attachment", array($this, "clear_cache"));
 
     // menu
     add_action("wp_update_nav_menu", function () {
@@ -64,11 +59,6 @@ class CacheCleanerMain
   public function clear_cache($id)
   {
     $post = get_post($id);
-
-    // if ACF, clear the relationship endpoint
-    if ($post->post_type == "acf") {
-      $this->clear_endpoint_cache("relationships");
-    }
 
     // if field of study, clear the program-explorer endpoint
     if ($post->post_type == "field_of_study") {
