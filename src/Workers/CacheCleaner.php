@@ -5,11 +5,11 @@ namespace CacheCleaner\Workers;
 /**
  * Gearman Worker
  */
-class CacheCleaner extends BaseWorker
+class CacheCleaner
 {
   /**
    * HTTP Engine
-   * @var [type]
+   * @var object
    */
   protected $http;
 
@@ -19,12 +19,6 @@ class CacheCleaner extends BaseWorker
     $this->logger = $settings["logger"];
     $this->http = new \HttpExchange\Adapters\Resty(new \Resty\Resty());
 
-    $this->addFunctions();
-  }
-
-  public function addFunctions()
-  {
-    parent::addFunctions();
     $this->worker->addFunction("api_clear_endpoint", array($this, "clearEndpoint"));
   }
 
@@ -43,9 +37,9 @@ class CacheCleaner extends BaseWorker
 
   protected function getBase()
   {
-    if (ENV == 'local') {
+    if (ENV == "local") {
       return "https://local.jhu.edu";
-    } elseif (ENV == 'staging') {
+    } elseif (ENV == "staging") {
       return "https://staging.jhu.edu";
     } else {
       return "https://www.jhu.edu";
