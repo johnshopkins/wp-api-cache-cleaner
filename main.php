@@ -46,7 +46,9 @@ class CacheCleanerMain
 
     // menu
     add_action("wp_update_nav_menu", function () {
-      $this->clear_endpoint_cache("menus");
+      $this->gearmanClient->doHighBackground("api_clear_cache", json_encode(array(
+        "endpoint" => "menus"
+      )));
     });
 
   }
@@ -60,23 +62,15 @@ class CacheCleanerMain
   {
     $post = get_post($id);
 
-    // if field of study, clear the program-explorer endpoint
-    if ($post->post_type == "field_of_study") {
-      $this->clear_endpoint_cache("program-explorer");
+    if (in_array($post->post_type, array("field_of_study", "search_response"))) {
+
+      $this->gearmanClient->doHighBackground("api_clear_cache", json_encode(array(
+        "id" => $id,
+        "endpoint" => "program-explorer"
+      )));
+
     }
 
-  }
-
-  /**
-   * Clear an endpoint
-   * @param  string $endpoint
-   * @return Job queue ID
-   */
-  public function clear_endpoint_cache($endpoint)
-  {
-    return $this->gearmanClient->doHighBackground("api_clear_endpoint", json_encode(array(
-      "endpoint" => $endpoint
-    )));
   }
 
 }

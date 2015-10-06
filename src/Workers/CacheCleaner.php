@@ -19,14 +19,27 @@ class CacheCleaner
     $this->logger = $settings["logger"];
     $this->http = new \HttpExchange\Adapters\Resty(new \Resty\Resty());
 
-    $this->worker->addFunction("api_clear_endpoint", array($this, "clearEndpoint"));
+    $this->worker->addFunction("api_clear_cache", array($this, "clearCache"));
   }
 
-  public function clearEndpoint(\GearmanJob $job)
+  public function clearCache(\GearmanJob $job)
   {
     $workload = json_decode($job->workload());
-    $endpoint = $workload->endpoint;
 
+    // clear ID (if any)
+    if (isset($workload->id)) {
+      $this->clear($workload->id);
+    }
+
+    // clear endpoint (if any)
+    if (isset($workload->endpoint)) {
+      $this->clear($workload->endpoint);
+    }
+
+  }
+
+  protected function clear($endpoint)
+  {
     echo $this->getDate() . " Clearing endpoint cache for {$endpoint}\n";
 
     $url = $this->getBase() . "/api/" . $endpoint;
@@ -39,6 +52,7 @@ class CacheCleaner
     }
 
     echo $this->getDate() . " Endpoint cache cleared successfully for {$endpoint}\n";
+    echo "------\n";
   }
 
   protected function getBase()
