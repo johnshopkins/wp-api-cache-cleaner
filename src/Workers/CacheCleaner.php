@@ -25,14 +25,20 @@ class CacheCleaner
   public function clearEndpoint(\GearmanJob $job)
   {
     $workload = json_decode($job->workload());
-    $endpoint = $wordload->endpoint;
+    $endpoint = $workload->endpoint;
 
     echo $this->getDate() . " Clearing endpoint cache for {$endpoint}\n";
 
-    $url = $this->getBase() . "/" + $endpoint;
-    $result = $this->http->get($url);
+    $url = $this->getBase() . "/api/" . $endpoint;
 
-    print_r($results); die();
+    $this->http->get($url, array("clear_cache" => true));
+
+    $status = $this->http->getStatusCode();
+    if ($status != 200) {
+      $this->logger->addWarning("Endpoint `{$endpoint}` was unable to be cleared. Returned with a status of {$status}");
+    }
+
+    echo $this->getDate() . " Endpoint cache cleared successfully for {$endpoint}\n";
   }
 
   protected function getBase()
