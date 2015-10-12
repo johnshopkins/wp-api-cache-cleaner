@@ -1,8 +1,8 @@
 <?php
 /*
 Plugin Name: CacheCleaner
-Description:
-Author: johnshopkins
+Description: Takes care of clearing the permanantly cached items when necessary.
+Author: Jen Wachter
 Version: 0.1
 */
 
@@ -16,8 +16,7 @@ class CacheCleanerMain
   public function __construct($logger)
   {
     $this->logger = $logger;
-
-    $this->gearmanClient = isset($injection["gearmanClient"]) ? $injection["gearmanClient"] : new \GearmanClient();
+    $this->gearmanClient = new \GearmanClient();
 
     $servers = Secret::get("jhu", ENV, "servers");
 
@@ -36,26 +35,20 @@ class CacheCleanerMain
 
   protected function addHooks()
   {
-    // warm button in admin
-    add_action("admin_post_wp_api_cache_cleaner_warm", array($this, "warm_cache"));
-
     // posts
     add_action("save_post", array($this, "clear_cache"));
 
-    // if trash is turned off, add a hook to take care of deleted
-    // posts. Otherwise, deleted posts are treated with save_post
-    // as a status change
+    // if trash is turned off, add a hook to take care of deleted posts.
+    // Otherwise, deleted posts are treated with save_post as a status change
     if (defined("EMPTY_TRASH_DAYS") && EMPTY_TRASH_DAYS == 0) {
         add_action("deleted_post", array($this, "clear_cache"));
     }
 
-    // attachments
-    // add_action("add_attachment", array($this, "clear_cache")); // this is taken care of in wp-uploads-sync
-    add_action("edit_attachment", array($this, "clear_cache"));
-
     // menu
     add_action("wp_update_nav_menu", function () {
-      $this->clear_endpoint_cache("menus");
+      $this->gearmanClient->doHighBackground("api_clear_cache", json_encode(array(
+        "endpoint" => "menus"
+      )));
     });
 
   }
@@ -69,50 +62,15 @@ class CacheCleanerMain
   {
     $post = get_post($id);
 
-    // don't clear nav menu items
-    if ($post->post_type == "nav_menu_item") return;
+    if (in_array($post->post_type, array("field_of_study", "search_response"))) {
 
-    // if ACF, clear the relationship endpoint
-    if ($post->post_type == "acf") return $this->clear_endpoint_cache("relationships");
-
-    // if field of study, clear the program-explorer endpoint and the psot
-    if ($post->post_type == "field_of_study") {
-      return $this->gearmanClient->doHighBackground("api_cache_clean", json_encode(array(
-        "post" => $post,
+      $this->gearmanClient->doHighBackground("api_clear_cache", json_encode(array(
+        "id" => $id,
         "endpoint" => "program-explorer"
       )));
 
     }
 
-    // otherwise, clear the post
-    return $this->gearmanClient->doHighBackground("api_cache_clean", json_encode(array(
-      "post" => $post
-    )));
-
-  }
-
-  /**
-   * Clear an endpoint
-   * @param  string $endpoint
-   * @return Job queue ID
-   */
-  public function clear_endpoint_cache($endpoint)
-  {
-    return $this->gearmanClient->doHighBackground("api_cache_clean", json_encode(array(
-      "endpoint" => $endpoint
-    )));
-  }
-
-  public function warm_cache()
-  {
-    // get checked types
-    if (isset($_POST["action"])) unset($_POST["action"]);
-    if (isset($_POST["submit"])) unset($_POST["submit"]);
-
-    $this->gearmanClient->doBackground("api_cache_warm", json_encode(array()));
-
-    $redirect = admin_url("tools.php?page=api-cache");
-    header("Location: {$redirect}");
   }
 
 }
