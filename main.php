@@ -36,12 +36,12 @@ class CacheCleanerMain
   protected function addHooks()
   {
     // posts
-    add_action("save_post", array($this, "clear_cache"));
+    add_action("save_post", array($this, "savedPost"));
 
     // if trash is turned off, add a hook to take care of deleted posts.
     // Otherwise, deleted posts are treated with save_post as a status change
     if (defined("EMPTY_TRASH_DAYS") && EMPTY_TRASH_DAYS == 0) {
-        add_action("deleted_post", array($this, "clear_cache"));
+        add_action("deleted_post", array($this, "deletedPost"));
     }
 
     // menu
@@ -53,14 +53,12 @@ class CacheCleanerMain
 
   }
 
-  /**
-   * Clear an object endpoint
-   * @param  integer $id
-   * @return Job queue ID
-   */
-  public function clear_cache($id)
+  public function savedPost($id)
   {
     $post = get_post($id);
+
+    // do nothing if this is just an auto draft
+    if ($post->post_status == "auto-draft") return;
 
     if (in_array($post->post_type, array("field_of_study", "search_response"))) {
 
@@ -70,7 +68,20 @@ class CacheCleanerMain
       )));
 
     }
+  }
 
+  public function deletedPost($id)
+  {
+    $post = get_post($id);
+
+    if (in_array($post->post_type, array("field_of_study", "search_response"))) {
+
+      // remove this post from the program explorer
+      $this->gearmanClient->doHighBackground("api_clear_cache", json_encode(array(
+        "endpoint" => "program-explorer"
+      )));
+
+    }
   }
 
 }
