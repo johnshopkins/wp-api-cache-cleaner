@@ -62,10 +62,17 @@ class CacheCleanerMain
 
     if (in_array($post->post_type, array("field_of_study", "search_response"))) {
 
-      $this->gearmanClient->doHighBackground("api_clear_cache", json_encode(array(
-        "id" => $id,
-        "endpoint" => "program-explorer"
-      )));
+      $workload = array();
+
+      if ($post->post_status == "publish") {
+        // only clear the ID if the post if published
+        $workload["id"] = $id;
+      }
+
+      // always clear the endpoint (removes posts reverted to draft status)
+      $workload["endpoint"] = "program-explorer";
+
+      $this->gearmanClient->doHighBackground("api_clear_cache", json_encode($workload));
 
     }
   }
