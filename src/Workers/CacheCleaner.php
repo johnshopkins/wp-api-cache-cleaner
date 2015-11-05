@@ -48,10 +48,12 @@ class CacheCleaner
 
     $status = $this->http->getStatusCode();
     if ($status != 200) {
-      $this->logger->addWarning("Endpoint `{$endpoint}` was unable to be cleared. Returned with a status of {$status}");
+      $this->logger->addWarning("Endpoint `{$endpoint}` was unable to be cleared. Returned with a status of {$status}", $this->http->getBody());
+      echo $this->getDate() . " Endpoint `{$endpoint}` was unable to be cleared. Returned with a status of {$status}\n";
+    } else {
+      echo $this->getDate() . " Endpoint cache cleared successfully for {$endpoint}\n";
     }
 
-    echo $this->getDate() . " Endpoint cache cleared successfully for {$endpoint}\n";
     echo "------\n";
   }
 
