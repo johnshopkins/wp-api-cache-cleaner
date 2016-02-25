@@ -72,7 +72,7 @@ class CacheCleaner
     } elseif (ENV == "staging") {
       return "https://staging.jhu.edu";
     } else {
-      return "https://www.jhu.edu";
+      return "https://origin-beta1.jhu.edu";
     }
   }
 
