@@ -16,21 +16,29 @@ class CacheCleanerMain
   public function __construct($logger)
   {
     $this->logger = $logger;
+    
+    $this->setupGearmanClient();
+    $this->addHooks();
+  }
+
+  /**
+   * Sets up the Gearman client, adding only
+   * the admin server.
+   */
+  protected function setupGearmanClient()
+  {
     $this->gearmanClient = new \GearmanClient();
 
     $servers = Secret::get("jhu", ENV, "servers");
 
-    if ($servers) {
-
-      foreach ($servers as $server) {
-        $this->gearmanClient->addServer($server->hostname);
-      }
-
-    } else {
-      $this->logger->addCritical("Servers unavailable for Gearman " . __FILE__ . " on line " . __LINE__);
+    if (!$servers) {
+      $wp_logger->addCritical("Servers unavailable for Gearman " . __FILE__ . " on line " . __LINE__);
     }
 
-    $this->addHooks();
+    // add admin server only
+    $server = array_shift($servers);
+
+    $this->gearmanClient->addServer($server->hostname);
   }
 
   protected function addHooks()
